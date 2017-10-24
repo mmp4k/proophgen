@@ -1,0 +1,17 @@
+{
+  "output": "proophgen.phar",
+  "chmod": "0755",
+  "compactors": [
+    "Herrera\\Box\\Compactor\\Php"
+  ],
+  "extract": false,
+  "finder": [
+    {
+      "name": ["*.php"],
+      "exclude": ["spec", "specs", "Test", "test", "Tests", "tests", "phpspec", "php-cs-fixer"],
+      "in": ["src", "vendor"]
+    }
+  ],
+  "stub": "proophgen",
+  "web": false
+}

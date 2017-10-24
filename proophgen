@@ -1,3 +1,20 @@
 #!/usr/bin/env php
 <?php
-include __DIR__.'/proophgen.php';
+
+try {
+    Phar::mapPhar('proophgen.phar');
+    require_once 'phar://proophgen.phar/vendor/autoload.php';
+} catch (PharException $e) {
+    require_once __DIR__.'/vendor/autoload.php';
+}
+
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+$application->add(new \Pilsniak\Command\DoCommand());
+// ... register commands
+
+$application->run();
+
+__HALT_COMPILER();
