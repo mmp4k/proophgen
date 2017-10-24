@@ -4,17 +4,41 @@ git:
   depth: 1
 cache:
   directories:
-    - $HOME/.composer
+  - "$HOME/.composer"
 env:
   global:
-    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress"
-    - COMPOSER_FLAGS=""
-php:
-  - '7.1'
-  - nightly
-install:
-  - composer install --dev
+  - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress"
+  - COMPOSER_FLAGS=""
 before_script:
-  - phpenv config-rm xdebug.ini
-script:
-  - ./vendor/bin/phpspec run
+- phpenv config-rm xdebug.ini
+jobs:
+  include:
+  - stage: Test
+    php: 7.1
+    install:
+    - travis_retry composer update $DEFAULT_COMPOSER_FLAGS $COMPOSER_FLAGS
+    script:
+    - "./bin/phpspec run || travis_terminate 1"
+  - stage: Test
+    php: 7.2
+    install:
+    - travis_retry composer update $DEFAULT_COMPOSER_FLAGS $COMPOSER_FLAGS
+    script:
+    - "./bin/phpspec run || travis_terminate 1"
+  - stage: Deployment
+    php: 7.1
+    env: COMPOSER_FLAGS="--no-dev --prefer-stable"
+    install:
+      - travis_retry composer update $DEFAULT_COMPOSER_FLAGS $COMPOSER_FLAGS
+      - composer global show kherge/box -q || composer global require --no-interaction --no-progress kherge/box:^2.7
+    script:
+      - php -d phar.readonly=false $(composer config home)/vendor/bin/box build
+    deploy:
+      provider: releases
+      skip_cleanup: true
+      api_key:
+        secure: PVEql7LGHBdO4gIvn6OK2MFrwEXm9eRMFHw5qtyZl1XdFG/pJadKUwOnwxiB9n/wwnlwcAMmV3yDbZGOUHls+bIreFf/Wwa9zOlGH4HQG3nTEc2E2Eqhu9gBsBhOsqTXe0x4y5gylhhDLcZBeWC04HJugn9xQLRZcjz09hR7q4/qXITXJsNkROuGG+hwS80WUHK4sQJI3Yldnf6P1LLliL5gidb6c+Y18SqjWp/8N5JMHqi9e0l9lTtculRTDVc3hHA4JBmP0VPSc4dlWMCPqBHgbblHXqD79NOi2mkJgal5ewpvd9/DqVd/RXttHzYKoZ6PWxE+53gWZUGzelPP6/e3lqY85dHkmtuLSk/WFpqg7r9s0pl7epgIpRKvEFUNkXYMJ4w69WHfjIUrSjqtvpxXCI/FZgvd8sL4zhsIm5cd4c2GLFcpV4DMg6zyEIqTaKxN+0EUdfgKCu72NTIiLHPNQBqlkv0mKPpqLlQdYflXgh1iWdb2YqSvb9X49N84JI6/3iAMx7hNRfh7a5pqRKgm6SzB98ODQWw6XRVMOl8OolWWypjqv22TPSOmxm9mOh4tg4CFUA8I9JLRpHVujkg41okz27SiyeHxwx63lYgL8cjuidp/JKfFVD78s3TqIXUXiVfmb0QV6X05xg7XQq7S2741acMVh2/BhVtntX4=
+      file: proophgen.phar
+      on:
+        repo: mmp4k/proophgen
+        tags: true
