@@ -25,6 +25,14 @@ jobs:
     - travis_retry composer update $DEFAULT_COMPOSER_FLAGS $COMPOSER_FLAGS
     script:
     - "./bin/phpspec run || travis_terminate 1"
+  - stage: Code Coverage
+    php: 7.1
+    install:
+    - travis_retry composer update $DEFAULT_COMPOSER_FLAGS $COMPOSER_FLAGS
+    script:
+    - "phpdbg -qrr ./bin/phpspec -n -vvv --config=./phpspec_cc.yml run || travis_terminate 1"
+    - "mkdir -p ./build/logs/ || travis_terminate 1"
+    - "./bin/coveralls -x build/clover.xml || travis_terminate 1"
   - stage: Deployment
     php: 7.1
     env: COMPOSER_FLAGS="--no-dev --prefer-stable"
