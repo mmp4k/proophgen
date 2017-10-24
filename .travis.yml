@@ -1,0 +1,20 @@
+language: php
+sudo: false
+git:
+  depth: 1
+cache:
+  directories:
+    - $HOME/.composer
+env:
+  global:
+    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress"
+    - COMPOSER_FLAGS=""
+php:
+  - '7.1'
+  - nightly
+install:
+  - composer install --dev
+before_script:
+  - phpenv config-rm xdebug.ini
+script:
+  - ./vendor/bin/phpspec run
