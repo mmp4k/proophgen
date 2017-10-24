@@ -1,0 +1,14 @@
+valueObjects:
+  - Model\ValueObject\Mail
+  - Model\ValueObject\Name
+  - Model\ValueObject\Password
+commands:
+  - Model\Command\RegisterUser
+  - Model\Command\LoginUser
+aggregateRoots:
+  Model\User:
+    - !UserRegistered
+  Model\Identity:
+    - !EmailIdentityCreated
+    - UserToIdentityAssigned
+    - UserLogged

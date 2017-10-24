@@ -1,0 +1,25 @@
+{
+    "name": "Pilsniak/proophgen",
+    "license": "BSD-3-Clause",
+    "type": "application",
+    "homepage": "https://pilsniak.com",
+    "require": {
+        "php": "^7.1",
+        "gossi/php-code-generator": "^0.5.0",
+        "symfony/yaml": "^3.3",
+        "league/flysystem": "^1.0",
+        "symfony/console": "^3.3"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-4": {"Pilsniak\\": "src/"},
+        "psr-0": {"Pilsniak\\": "src/"}
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^4.1",
+        "friendsofphp/php-cs-fixer": "^2.7"
+    },
+    "bin": ["proophgen"]
+}
