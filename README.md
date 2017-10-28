@@ -10,7 +10,7 @@
 
 Why developers love CRUD? Because it's easy to automate work around it. Why developers hate DDD/CQRS? Boilerplates.
 
-Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains more than 20 files (with phpspec tests!) and start coding. No more boilerplates.
+Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains **40 files** (with phpspec tests!) and start coding. No more boilerplates.
 
 You can also use singe command to create your ValueObject, Command.
 
@@ -72,14 +72,25 @@ And there is your result (in v0.1.2):
 ./src/Model/ValueObject/Mail.php
 ./src/Model/ValueObject/Name.php
 ./src/Model/ValueObject/Password.php
+./spec/Infrastructure/Identity/EventSourcedSpec.php
+./spec/Infrastructure/Identity/InMemorySpec.php
+./spec/Infrastructure/User/EventSourcedSpec.php
+./spec/Infrastructure/User/InMemorySpec.php
 ./spec/Model/Command/LoginUserSpec.php
 ./spec/Model/Command/RegisterUserSpec.php
 ./spec/Model/CommandHandler/LoginUserHandlerSpec.php
 ./spec/Model/CommandHandler/RegisterUserHandlerSpec.php
+./spec/Model/Identity/Event/EmailIdentityCreatedSpec.php
+./spec/Model/Identity/Event/UserLoggedSpec.php
+./spec/Model/Identity/Event/UserToIdentityAssignedSpec.php
+./spec/Model/Identity/Exception/IdentityNotFoundSpec.php
+./spec/Model/IdentitySpec.php
+./spec/Model/User/Event/UserRegisteredSpec.php
+./spec/Model/User/Exception/UserNotFoundSpec.php
+./spec/Model/UserSpec.php
 ./spec/Model/ValueObject/MailSpec.php
 ./spec/Model/ValueObject/NameSpec.php
 ./spec/Model/ValueObject/PasswordSpec.php
-
 ```
 
 ## Create single ValueObject

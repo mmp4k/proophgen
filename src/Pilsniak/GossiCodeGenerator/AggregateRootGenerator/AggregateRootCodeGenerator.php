@@ -92,6 +92,7 @@ class AggregateRootCodeGenerator
                     ->addParameter(PhpParameter::create('event')->setType($event->name()))
                     ->setType('void')
                     ->setVisibility('private')
+                    ->setBody($this->generateBodyForWhenMethod($event))
             );
         }
 
@@ -125,5 +126,13 @@ class AggregateRootCodeGenerator
                 ->setBody($body)
                 ->setType('void')
         );
+    }
+
+    private function generateBodyForWhenMethod(Event $event): string
+    {
+        if (!$event->isCreator()) {
+            return '';
+        }
+        return '$this->id = $event->aggregateId();';
     }
 }

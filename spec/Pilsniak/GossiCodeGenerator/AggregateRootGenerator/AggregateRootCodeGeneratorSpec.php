@@ -76,6 +76,7 @@ class User extends AggregateRoot {
 \t}
 
 \tprivate function whenUserRegistered(UserRegistered \$event): void {
+\t\t\$this->id = \$event->aggregateId();
 \t}
 }
 ";
