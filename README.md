@@ -8,9 +8,11 @@
 [![Packagist](https://img.shields.io/packagist/l/pilsniak/proophgen.svg?style=flat-square)]()
 [![GitHub last commit](https://img.shields.io/github/last-commit/mmp4k/proophgen.svg?style=flat-square)]()
 
-Why developers love CRUD? Because it's easy to automate work about it. Why developers hates DDD/CQRS? Boilerplates.
+Why developers love CRUD? Because it's easy to automate work around it. Why developers hate DDD/CQRS? Boilerplates.
 
-Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains more than 20 files and start coding. No more boilerplates.
+Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains more than 20 files (with phpspec tests!) and start coding. No more boilerplates.
+
+You can also use singe command to create your ValueObject.
 
 ## Examples
 
@@ -39,30 +41,54 @@ There is your command to run:
 $ proophgen do
 ```
 
-And there is your result (in v0.1):
+And there is your result (in v0.1.2):
 
 ```
-./Infrastructure/Identity/EventSourced.php
-./Infrastructure/Identity/InMemory.php
-./Infrastructure/User/EventSourced.php
-./Infrastructure/User/InMemory.php
-./Model/Command/LoginUser.php
-./Model/Command/RegisterUser.php
-./Model/CommandHandler/LoginUserHandler.php
-./Model/CommandHandler/RegisterUserHandler.php
-./Model/Identity/Event/EmailIdentityCreated.php
-./Model/Identity/Event/UserLogged.php
-./Model/Identity/Event/UserToIdentityAssigned.php
-./Model/Identity/Exception/IdentityNotFound.php
-./Model/Identity.php
-./Model/IdentityRepository.php
-./Model/User/Event/UserRegistered.php
-./Model/User/Exception/UserNotFound.php
-./Model/User.php
-./Model/UserRepository.php
-./Model/ValueObject/Mail.php
-./Model/ValueObject/Name.php
-./Model/ValueObject/Password.php
+./src/Infrastructure/Identity/EventSourced.php
+./src/Infrastructure/Identity/InMemory.php
+./src/Infrastructure/User/EventSourced.php
+./src/Infrastructure/User/InMemory.php
+./src/Model/Command/LoginUser.php
+./src/Model/Command/RegisterUser.php
+./src/Model/CommandHandler/LoginUserHandler.php
+./src/Model/CommandHandler/RegisterUserHandler.php
+./src/Model/Identity/Event/EmailIdentityCreated.php
+./src/Model/Identity/Event/UserLogged.php
+./src/Model/Identity/Event/UserToIdentityAssigned.php
+./src/Model/Identity/Exception/IdentityNotFound.php
+./src/Model/Identity.php
+./src/Model/IdentityRepository.php
+./src/Model/User/Event/UserRegistered.php
+./src/Model/User/Exception/UserNotFound.php
+./src/Model/User.php
+./src/Model/UserRepository.php
+./src/Model/ValueObject/Mail.php
+./src/Model/ValueObject/Name.php
+./src/Model/ValueObject/Password.php
+./spec/Model/Command/LoginUserSpec.php
+./spec/Model/Command/RegisterUserSpec.php
+./spec/Model/CommandHandler/LoginUserHandlerSpec.php
+./spec/Model/CommandHandler/RegisterUserHandlerSpec.php
+./spec/Model/ValueObject/MailSpec.php
+./spec/Model/ValueObject/NameSpec.php
+./spec/Model/ValueObject/PasswordSpec.php
+
+```
+
+## Create single ValueObject
+
+You need to run that command:
+
+```
+proophgen vo Model/ValueObject/FirstName
+```
+
+As a result you should to see something similar to:
+
+```
+Creating files:
+[v] ./src/Model/ValueObject/FirstName.php
+[v] ./spec/Model/ValueObject/FirstNameSpec.php
 ```
 
 ## Installation
