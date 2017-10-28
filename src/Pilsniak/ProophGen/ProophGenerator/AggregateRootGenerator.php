@@ -4,6 +4,7 @@ namespace Pilsniak\ProophGen\ProophGenerator;
 
 use Pilsniak\ProophGen\AggregateRootExecuter;
 use Pilsniak\ProophGen\Model\AggregateRoot;
+use Pilsniak\ProophGen\ProophGenerator\AggregateRootGenerator\PhpSpecAggregateRootExecuter;
 
 class AggregateRootGenerator
 {
@@ -11,14 +12,22 @@ class AggregateRootGenerator
      * @var AggregateRootExecuter
      */
     private $aggregateRootExecuter;
+    /**
+     * @var PhpSpecAggregateRootExecuter
+     */
+    private $phpSpecAggregateRootExecuter;
 
-    public function __construct(AggregateRootExecuter $aggregateRootExecuter)
+    public function __construct(AggregateRootExecuter $aggregateRootExecuter, PhpSpecAggregateRootExecuter $phpSpecAggregateRootExecuter)
     {
         $this->aggregateRootExecuter = $aggregateRootExecuter;
+        $this->phpSpecAggregateRootExecuter = $phpSpecAggregateRootExecuter;
     }
 
     public function generate(AggregateRoot $aggregateRoot): array
     {
-        return $this->aggregateRootExecuter->execute($aggregateRoot);
+        return array_merge(
+            $this->aggregateRootExecuter->execute($aggregateRoot),
+            $this->phpSpecAggregateRootExecuter->execute($aggregateRoot)
+        );
     }
 }

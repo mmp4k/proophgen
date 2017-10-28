@@ -11,6 +11,7 @@ use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootEventSourced
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootExceptionNotFoundGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootInMemoryRepository;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootRepositoryInterfaceGenerator;
+use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator;
 use Pilsniak\GossiCodeGenerator\CommandGenerator\PhpSpecCommandGenerator;
 use Pilsniak\GossiCodeGenerator\ValueObjectGenerator\PhpSpecValueObjectGenerator;
 use Pilsniak\ProophGen\ProophGenerator;
@@ -62,7 +63,16 @@ class DoCommand extends Command
         $aggregateRootRepositoryInterfaceGenerator = new AggregateRootRepositoryInterfaceGenerator($codeFileGenerator);
         $aggregateRootRepositoryInMemoryGenerator = new AggregateRootInMemoryRepository($codeFileGenerator);
         $aggregateRootRepositoryEventSourcedGenerator = new AggregateRootEventSourcedRepository($codeFileGenerator);
-        $rootGenerator = new AggregateRootGenerator(new \Pilsniak\GossiCodeGenerator\AggregateRootGenerator($aggregateRootCodeGenerator, $aggregateRootExceptionNotFoundGenerator, $aggregateRootEventGenerator, $aggregateRootRepositoryInterfaceGenerator, $aggregateRootRepositoryInMemoryGenerator, $aggregateRootRepositoryEventSourcedGenerator));
+        $rootGenerator = new AggregateRootGenerator(
+            new \Pilsniak\GossiCodeGenerator\AggregateRootGenerator($aggregateRootCodeGenerator, $aggregateRootExceptionNotFoundGenerator, $aggregateRootEventGenerator, $aggregateRootRepositoryInterfaceGenerator, $aggregateRootRepositoryInMemoryGenerator, $aggregateRootRepositoryEventSourcedGenerator),
+            new PhpSpecGenerator(
+                new PhpSpecGenerator\PhpSpecAggregateCode($codeFileGenerator),
+                new PhpSpecGenerator\PhpSpecEventSourced($codeFileGenerator),
+                new PhpSpecGenerator\PhpSpecEvent($codeFileGenerator),
+                new PhpSpecGenerator\PhpSpecExceptionNotFound($codeFileGenerator),
+                new PhpSpecGenerator\PhpSpecInMemoryRepository($codeFileGenerator)
+            )
+        );
 
         $proophGenerator = new ProophGenerator($commandGenerator, $valueObjectGenerator, $rootGenerator);
         $proophGenerator->generate($loader, new FileSystem(new \League\Flysystem\Filesystem(new Local('./'))));

@@ -63,6 +63,11 @@ class AggregateRoot
         return './src/' . str_replace('\\', DIRECTORY_SEPARATOR, $this->qualifiedName).'/Exception/'.$this->className().'NotFound.php';
     }
 
+    public function exceptionClassName()
+    {
+        return $this->className().'NotFound';
+    }
+    
     public function exceptionQualifiedName()
     {
         return $this->qualifiedName.'\\Exception\\'.$this->className().'NotFound';
