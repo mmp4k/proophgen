@@ -1,15 +1,14 @@
 <?php
 
-namespace spec\Pilsniak\GossiCodeGenerator;
+namespace spec\Pilsniak\GossiCodeGenerator\ValueObjectGenerator;
 
 use gossi\codegen\generator\CodeFileGenerator;
-use Pilsniak\GossiCodeGenerator\ValueObjectGenerator;
+use Pilsniak\GossiCodeGenerator\ValueObjectGenerator\PhpSpecValueObjectGenerator;
 use PhpSpec\ObjectBehavior;
 use Pilsniak\ProophGen\Model\ValueObject;
-use Pilsniak\ProophGen\ValueObjectExecuter;
 use Prophecy\Argument;
 
-class ValueObjectGeneratorSpec extends ObjectBehavior
+class PhpSpecValueObjectGeneratorSpec extends ObjectBehavior
 {
     function let()
     {
@@ -20,17 +19,12 @@ class ValueObjectGeneratorSpec extends ObjectBehavior
             'declareStrictTypes' => true
         ]);
 
-        $this->beConstructedWith(new ValueObjectGenerator\ValueObjectGenerator($generator));
+        $this->beConstructedWith(new PhpSpecValueObjectGenerator\PhpSpecValueObjectGenerator($generator));
     }
 
-    function it_implements_correct_interface()
+    function it_generates_phpspec_for_value_object()
     {
-        $this->shouldImplement(ValueObjectExecuter::class);
-    }
-
-    function it_generate_file_to_value_object()
-    {
-        $valueObject = new ValueObject('Model\ValueObject\Name');
+        $valueObject = new ValueObject('Model\ValueObject\Mail');;
         $response = $this->execute($valueObject);
         $response->shouldBeArray();
         $response->shouldHaveCount(1);

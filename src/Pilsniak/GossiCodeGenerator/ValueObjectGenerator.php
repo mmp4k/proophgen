@@ -14,50 +14,19 @@ use Pilsniak\ProophGen\ValueObjectExecuter;
 class ValueObjectGenerator implements ValueObjectExecuter
 {
     /**
-     * @var CodeFileGenerator
+     * @var ValueObjectGenerator\ValueObjectGenerator
      */
-    private $codeFileGenerator;
+    private $valueObjectGenerator;
 
-    public function __construct(CodeFileGenerator $codeFileGenerator)
+    public function __construct(ValueObjectGenerator\ValueObjectGenerator $valueObjectGenerator)
     {
-        $this->codeFileGenerator = $codeFileGenerator;
+        $this->valueObjectGenerator = $valueObjectGenerator;
     }
 
-    public function execute(ValueObject $valueObject): string
+    public function execute(ValueObject $valueObject): array
     {
-        $property = new VariableNameGenerator($valueObject);
-
-        $construct = PhpMethod::create('__construct')
-            ->addParameter(PhpParameter::create($property->variableName())->setType('string'))
-            ->setBody($property->property().' = '.$property->variable().';')
-            ->setVisibility('private');
-
-        $create = PhpMethod::create('create')
-            ->addParameter(PhpParameter::create($property->variableName())->setType('string'))
-            ->setBody('return new self('.$property->variable().');')
-            ->setType('self')
-            ->setStatic(true)
-        ;
-
-        $equal = PhpMethod::create('isEqual')
-            ->addParameter(PhpParameter::create($property->variableName())->setType('self'))
-            ->setBody('return '.$property->variable().'->get() === $this->get();')
-            ->setType('bool')
-        ;
-
-        $get = PhpMethod::create('get')
-            ->setType('string')
-            ->setBody('return '.$property->property().';')
-        ;
-
-        $class = new PhpClass();
-        $class->setQualifiedName($valueObject->qualifiedName());
-        $class->setProperty(PhpProperty::create($property->variableName())->setType('string'));
-        $class->setMethod($construct);
-        $class->setMethod($create);
-        $class->setMethod($equal);
-        $class->setMethod($get);
-
-        return $this->codeFileGenerator->generate($class);
+        return [
+            $this->valueObjectGenerator->execute($valueObject)
+        ];
     }
 }

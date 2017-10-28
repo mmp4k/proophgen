@@ -1,11 +1,11 @@
 <?php
 
-namespace Pilsniak\ProophGen;
+namespace Pilsniak\ProophGen\ProophGenerator\ValueObjectGenerator;
 
 use Pilsniak\ProophGen\Model\FileToSave;
 use Pilsniak\ProophGen\Model\ValueObject;
 
-interface ValueObjectExecuter
+interface PhpSpecValueObjectExecuter
 {
     /**
      * @param ValueObject $valueObject

@@ -12,6 +12,7 @@ use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootExceptionNot
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootInMemoryRepository;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootRepositoryInterfaceGenerator;
 use Pilsniak\GossiCodeGenerator\CommandGenerator\PhpSpecCommandGenerator;
+use Pilsniak\GossiCodeGenerator\ValueObjectGenerator\PhpSpecValueObjectGenerator;
 use Pilsniak\ProophGen\ProophGenerator;
 use Pilsniak\ProophGen\ProophGenerator\AggregateRootGenerator;
 use Pilsniak\ProophGen\ProophGenerator\CommandGenerator;
@@ -49,7 +50,10 @@ class DoCommand extends Command
             );
 
         /* Value Object Generator */
-        $valueObjectGenerator = new ValueObjectGenerator(new \Pilsniak\GossiCodeGenerator\ValueObjectGenerator($codeFileGenerator));
+        $valueObjectGenerator = new ValueObjectGenerator(
+            new \Pilsniak\GossiCodeGenerator\ValueObjectGenerator(new \Pilsniak\GossiCodeGenerator\ValueObjectGenerator\ValueObjectGenerator($codeFileGenerator)),
+            new PhpSpecValueObjectGenerator(new PhpSpecValueObjectGenerator\PhpSpecValueObjectGenerator($codeFileGenerator))
+        );
 
         /* Aggregate Root Generator */
         $aggregateRootCodeGenerator = new AggregateRootCodeGenerator($codeFileGenerator);
