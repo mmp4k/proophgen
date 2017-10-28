@@ -13,6 +13,7 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 $application->add(new \Pilsniak\Command\DoCommand());
+$application->add(new \Pilsniak\Command\ValueObjectCommand());
 // ... register commands
 
 $application->run();
