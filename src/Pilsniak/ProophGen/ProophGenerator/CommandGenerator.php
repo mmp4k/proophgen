@@ -4,6 +4,7 @@ namespace Pilsniak\ProophGen\ProophGenerator;
 
 use Pilsniak\ProophGen\CommandExecuter;
 use Pilsniak\ProophGen\Model\Command;
+use Pilsniak\ProophGen\Model\FileToSave;
 use Pilsniak\ProophGen\ProophGenerator\CommandGenerator\PhpSpecCommandExecuter;
 
 class CommandGenerator
@@ -23,6 +24,11 @@ class CommandGenerator
         $this->phpSpecCommandExecuter = $phpSpecCommandExecuter;
     }
 
+    /**
+     * @param Command $command
+     *
+     * @return array|FileToSave[]
+     */
     public function generate(Command $command): array
     {
         return array_merge(

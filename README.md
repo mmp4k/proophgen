@@ -12,7 +12,14 @@ Why developers love CRUD? Because it's easy to automate work around it. Why deve
 
 Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains more than 20 files (with phpspec tests!) and start coding. No more boilerplates.
 
-You can also use singe command to create your ValueObject.
+You can also use singe command to create your ValueObject, Command.
+
+## Table of Contents 
+
+* [Examples](#examples)  
+* [Create single ValueObject](#create-single-valueobject)
+* [Create single Command](#create-single-command)  
+* [Installation](#installation)
 
 ## Examples
 
@@ -89,6 +96,24 @@ As a result you should to see something similar to:
 Creating files:
 [v] ./src/Model/ValueObject/FirstName.php
 [v] ./spec/Model/ValueObject/FirstNameSpec.php
+```
+
+## Create single Command
+
+You need to run that command:
+
+```
+proophgen c Model/Command/RemoveUser 
+```
+
+As a result you should to see something similar to:
+
+```
+Creating files:
+[v] ./src/Model/Command/RemoveUser.php
+[v] ./src/Model/CommandHandler/RemoveUserHandler.php
+[v] ./spec/Model/Command/RemoveUserSpec.php
+[v] ./spec/Model/CommandHandler/RemoveUserHandlerSpec.php
 ```
 
 ## Installation

@@ -14,6 +14,7 @@ $application = new Application();
 
 $application->add(new \Pilsniak\Command\DoCommand());
 $application->add(new \Pilsniak\Command\ValueObjectCommand());
+$application->add(new \Pilsniak\Command\CommandGeneratorCommand());
 // ... register commands
 
 $application->run();
