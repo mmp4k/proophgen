@@ -11,6 +11,7 @@ use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootEventSourced
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootExceptionNotFoundGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootInMemoryRepository;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootRepositoryInterfaceGenerator;
+use Pilsniak\GossiCodeGenerator\CommandGenerator\PhpSpecCommandGenerator;
 use Pilsniak\ProophGen\ProophGenerator;
 use Pilsniak\ProophGen\ProophGenerator\AggregateRootGenerator;
 use Pilsniak\ProophGen\ProophGenerator\CommandGenerator;
@@ -42,7 +43,10 @@ class DoCommand extends Command
         /* Command Generator */
         $commandHandlerCodeGenerator = new \Pilsniak\GossiCodeGenerator\CommandGenerator\CommandHandlerGenerator($codeFileGenerator);
         $commandCodeGenerator = new \Pilsniak\GossiCodeGenerator\CommandGenerator\CommandGenerator($codeFileGenerator);
-        $commandGenerator = new CommandGenerator(new \Pilsniak\GossiCodeGenerator\CommandGenerator($commandHandlerCodeGenerator, $commandCodeGenerator));
+        $commandGenerator = new CommandGenerator(
+            new \Pilsniak\GossiCodeGenerator\CommandGenerator($commandHandlerCodeGenerator, $commandCodeGenerator),
+            new PhpSpecCommandGenerator(new PhpSpecCommandGenerator\PhpSpecCommandGenerator($codeFileGenerator), new PhpSpecCommandGenerator\PhpSpecCommandHandlerGenerator($codeFileGenerator))
+            );
 
         /* Value Object Generator */
         $valueObjectGenerator = new ValueObjectGenerator(new \Pilsniak\GossiCodeGenerator\ValueObjectGenerator($codeFileGenerator));
