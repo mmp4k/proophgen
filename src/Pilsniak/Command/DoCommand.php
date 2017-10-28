@@ -61,7 +61,7 @@ class DoCommand extends Command
         $rootGenerator = new AggregateRootGenerator(new \Pilsniak\GossiCodeGenerator\AggregateRootGenerator($aggregateRootCodeGenerator, $aggregateRootExceptionNotFoundGenerator, $aggregateRootEventGenerator, $aggregateRootRepositoryInterfaceGenerator, $aggregateRootRepositoryInMemoryGenerator, $aggregateRootRepositoryEventSourcedGenerator));
 
         $proophGenerator = new ProophGenerator($commandGenerator, $valueObjectGenerator, $rootGenerator);
-        $proophGenerator->generate($loader, new FileSystem(new \League\Flysystem\Filesystem(new Local('./src/'))));
+        $proophGenerator->generate($loader, new FileSystem(new \League\Flysystem\Filesystem(new Local('./'))));
 
     }
 }

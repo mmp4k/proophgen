@@ -26,7 +26,7 @@ class ValueObjectGenerator
     public function generate(ValueObject $valueObject)
     {
         return [
-            new FileToSave($valueObject->path(), $this->valueObjectExecuter->execute($valueObject))
+            new FileToSave('./src/'.$valueObject->path(), $this->valueObjectExecuter->execute($valueObject))
         ];
 
     }

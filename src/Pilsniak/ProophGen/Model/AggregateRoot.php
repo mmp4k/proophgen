@@ -34,7 +34,7 @@ class AggregateRoot
 
     public function eventPath(Event $event)
     {
-        return str_replace('\\', DIRECTORY_SEPARATOR, $this->eventNamespace($event)).'.php';
+        return './src/' . str_replace('\\', DIRECTORY_SEPARATOR, $this->eventNamespace($event)).'.php';
     }
 
     public function qualifiedName()
@@ -50,7 +50,7 @@ class AggregateRoot
 
     public function path()
     {
-        return str_replace('\\', DIRECTORY_SEPARATOR, $this->qualifiedName).'.php';
+        return './src/' . str_replace('\\', DIRECTORY_SEPARATOR, $this->qualifiedName).'.php';
     }
 
     public function className()
@@ -60,7 +60,7 @@ class AggregateRoot
 
     public function exceptionPath()
     {
-        return str_replace('\\', DIRECTORY_SEPARATOR, $this->qualifiedName).'/Exception/'.$this->className().'NotFound.php';
+        return './src/' . str_replace('\\', DIRECTORY_SEPARATOR, $this->qualifiedName).'/Exception/'.$this->className().'NotFound.php';
     }
 
     public function exceptionQualifiedName()
@@ -81,6 +81,6 @@ class AggregateRoot
 
     public function repositoryInterfacePath()
     {
-        return str_replace('\\', DIRECTORY_SEPARATOR, $this->repositoryInterfaceQualifiedName()).'.php';
+        return './src/' . str_replace('\\', DIRECTORY_SEPARATOR, $this->repositoryInterfaceQualifiedName()).'.php';
     }
 }

@@ -28,7 +28,7 @@ class PhpSpecCommandHandlerGenerator
 
     private function generateFileName(Command $command): string
     {
-        $prefix = '../spec/' . $command->commandHandlerPath();
+        $prefix = './spec/' . $command->commandHandlerPath();
 
         return str_replace('.php', 'Spec.php', $prefix);
     }

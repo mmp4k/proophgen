@@ -25,7 +25,7 @@ class AggregateRootEventSourcedRepository
 
     public function execute(AggregateRoot $aggregateRoot): FileToSave
     {
-        return new FileToSave('Infrastructure/'.$aggregateRoot->className().'/EventSourced.php', $this->content($aggregateRoot));
+        return new FileToSave('./src/Infrastructure/'.$aggregateRoot->className().'/EventSourced.php', $this->content($aggregateRoot));
     }
 
 

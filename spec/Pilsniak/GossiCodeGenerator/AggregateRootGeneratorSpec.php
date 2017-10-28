@@ -40,12 +40,12 @@ class AggregateRootGeneratorSpec extends ObjectBehavior
         $aggregateRoot = new AggregateRoot('Model\User', [new Event('UserRegistered')]);
         $response = $this->execute($aggregateRoot);
         $response->shouldBeArray();
-        $response[0]->filename()->shouldBe('Model/User.php');
-        $response[1]->filename()->shouldBe('Model/UserRepository.php');
-        $response[2]->filename()->shouldBe('Model/User/Exception/UserNotFound.php');
-        $response[3]->filename()->shouldBe('Model/User/Event/UserRegistered.php');
-        $response[4]->filename()->shouldBe('Infrastructure/User/InMemory.php');
-        $response[5]->filename()->shouldBe('Infrastructure/User/EventSourced.php');
+        $response[0]->filename()->shouldBe('./src/Model/User.php');
+        $response[1]->filename()->shouldBe('./src/Model/UserRepository.php');
+        $response[2]->filename()->shouldBe('./src/Model/User/Exception/UserNotFound.php');
+        $response[3]->filename()->shouldBe('./src/Model/User/Event/UserRegistered.php');
+        $response[4]->filename()->shouldBe('./src/Infrastructure/User/InMemory.php');
+        $response[5]->filename()->shouldBe('./src/Infrastructure/User/EventSourced.php');
         $response->shouldHaveCount(6);
     }
 

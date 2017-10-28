@@ -43,7 +43,7 @@ class RegisterUserHandlerSpec extends ObjectBehavior {
 }
 ";
         $command = new Command('Model\Command\RegisterUser');
-        $this->execute($command)->filename()->shouldBe('../spec/Model/CommandHandler/RegisterUserHandlerSpec.php');
+        $this->execute($command)->filename()->shouldBe('./spec/Model/CommandHandler/RegisterUserHandlerSpec.php');
         $this->execute($command)->fileContent()->shouldBe($content);
     }
 }

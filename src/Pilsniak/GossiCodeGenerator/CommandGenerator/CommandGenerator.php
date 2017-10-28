@@ -24,7 +24,7 @@ class CommandGenerator
 
     public function execute(Command $command): FileToSave
     {
-        return new FileToSave($command->commandPath(), $this->commandCode($command));
+        return new FileToSave('./src/'.$command->commandPath(), $this->commandCode($command));
     }
 
     private function commandCode(Command $command): string

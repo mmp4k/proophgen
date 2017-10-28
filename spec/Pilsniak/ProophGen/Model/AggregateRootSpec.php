@@ -27,7 +27,7 @@ class AggregateRootSpec extends ObjectBehavior
 
     function it_returns_path()
     {
-        $this->path()->shouldBe('Model/User.php');
+        $this->path()->shouldBe('./src/Model/User.php');
     }
 
     function it_returns_repository_interface_name()
@@ -42,13 +42,13 @@ class AggregateRootSpec extends ObjectBehavior
 
     function it_returns_repository_path()
     {
-        $this->repositoryInterfacePath()->shouldBe('Model/UserRepository.php');
+        $this->repositoryInterfacePath()->shouldBe('./src/Model/UserRepository.php');
     }
     
 
     // Exceptions
     function it_returns_exception_path()
     {
-        $this->exceptionPath()->shouldBe('Model/User/Exception/UserNotFound.php');
+        $this->exceptionPath()->shouldBe('./src/Model/User/Exception/UserNotFound.php');
     }
 }

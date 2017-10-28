@@ -23,7 +23,7 @@ class CommandHandlerGenerator
 
     public function execute(Command $command) : FileToSave
     {
-        return new FileToSave($command->commandHandlerPath(), $this->commandHandlerCode($command));
+        return new FileToSave('./src/'.$command->commandHandlerPath(), $this->commandHandlerCode($command));
     }
 
 

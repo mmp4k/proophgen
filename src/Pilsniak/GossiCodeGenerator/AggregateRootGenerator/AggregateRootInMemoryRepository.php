@@ -26,7 +26,7 @@ class AggregateRootInMemoryRepository
 
     public function execute(AggregateRoot $aggregateRoot) : FileToSave
     {
-        return new FileToSave('Infrastructure/'.$aggregateRoot->className().'/InMemory.php', $this->content($aggregateRoot));
+        return new FileToSave('./src/Infrastructure/'.$aggregateRoot->className().'/InMemory.php', $this->content($aggregateRoot));
     }
 
     private function content(AggregateRoot $aggregateRoot): string

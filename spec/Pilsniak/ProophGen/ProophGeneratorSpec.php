@@ -44,18 +44,18 @@ class ProophGeneratorSpec extends ObjectBehavior
 
         $valueObjectGenerator->generate($valueObject)->shouldBeCalled();
         $valueObjectGenerator->generate($valueObject)->willReturn([
-            new FileToSave('Model/ValueObject/Mail.php', 'somecontent')
+            new FileToSave('./src/Model/ValueObject/Mail.php', 'somecontent')
         ]);
 
         $commandGenerator->generate($command)->shouldBeCalled();
         $commandGenerator->generate($command)->willReturn([
-            new FileToSave('Model/Command/RegisterUser.php', 'somecontent'),
-            new FileToSave('Model/CommandHandler/RegisterUserHandler.php', 'somecontent')
+            new FileToSave('./src/Model/Command/RegisterUser.php', 'somecontent'),
+            new FileToSave('./src/Model/CommandHandler/RegisterUserHandler.php', 'somecontent')
         ]);
 
-        $fileSystem->save('Model/ValueObject/Mail.php', 'somecontent')->shouldBeCalled();
-        $fileSystem->save('Model/Command/RegisterUser.php', 'somecontent')->shouldBeCalled();
-        $fileSystem->save('Model/CommandHandler/RegisterUserHandler.php', 'somecontent')->shouldBeCalled();
+        $fileSystem->save('./src/Model/ValueObject/Mail.php', 'somecontent')->shouldBeCalled();
+        $fileSystem->save('./src/Model/Command/RegisterUser.php', 'somecontent')->shouldBeCalled();
+        $fileSystem->save('./src/Model/CommandHandler/RegisterUserHandler.php', 'somecontent')->shouldBeCalled();
 
         $this->generate($fileParser, $fileSystem);
     }
