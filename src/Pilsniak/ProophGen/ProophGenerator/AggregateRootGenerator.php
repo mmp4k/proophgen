@@ -4,6 +4,7 @@ namespace Pilsniak\ProophGen\ProophGenerator;
 
 use Pilsniak\ProophGen\AggregateRootExecuter;
 use Pilsniak\ProophGen\Model\AggregateRoot;
+use Pilsniak\ProophGen\Model\FileToSave;
 use Pilsniak\ProophGen\ProophGenerator\AggregateRootGenerator\PhpSpecAggregateRootExecuter;
 
 class AggregateRootGenerator
@@ -23,6 +24,11 @@ class AggregateRootGenerator
         $this->phpSpecAggregateRootExecuter = $phpSpecAggregateRootExecuter;
     }
 
+    /**
+     * @param AggregateRoot $aggregateRoot
+     *
+     * @return array|FileToSave[]
+     */
     public function generate(AggregateRoot $aggregateRoot): array
     {
         return array_merge(

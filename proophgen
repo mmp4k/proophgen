@@ -10,11 +10,12 @@ try {
 
 use Symfony\Component\Console\Application;
 
-$application = new Application('proophgen', '0.1.5');
+$application = new Application('proophgen', '0.1.6');
 
 $application->add(new \Pilsniak\Command\DoCommand());
 $application->add(new \Pilsniak\Command\ValueObjectCommand());
 $application->add(new \Pilsniak\Command\CommandGeneratorCommand());
+$application->add(new \Pilsniak\Command\AggregateRootCommand());
 // ... register commands
 
 $application->run();

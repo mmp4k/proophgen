@@ -18,7 +18,8 @@ You can also use singe command to create your ValueObject, Command.
 
 * [Examples](#examples)  
 * [Create single ValueObject](#create-single-valueobject)
-* [Create single Command](#create-single-command)  
+* [Create single Command](#create-single-command)
+* [Create single AggregateRoot with Events](#create-single-aggregateroot-with-events)  
 * [Installation](#installation)
 
 ## Examples
@@ -125,6 +126,35 @@ Creating files:
 [v] ./src/Model/CommandHandler/RemoveUserHandler.php
 [v] ./spec/Model/Command/RemoveUserSpec.php
 [v] ./spec/Model/CommandHandler/RemoveUserHandlerSpec.php
+```
+
+## Create single AggregateRoot with Events
+
+You need to run that command:
+
+```
+proophgen ar Model/Admin \!AdminCreated AdminRemoved AdminBlocked  
+```
+
+As a result you should to see something similar to:
+
+```
+Creating files:
+[v] ./src/Model/Admin.php
+[v] ./src/Model/AdminRepository.php
+[v] ./src/Model/Admin/Exception/AdminNotFound.php
+[v] ./src/Model/Admin/Event/AdminCreated.php
+[v] ./src/Model/Admin/Event/AdminRemoved.php
+[v] ./src/Model/Admin/Event/AdminBlocked.php
+[v] ./src/Infrastructure/Admin/InMemory.php
+[v] ./src/Infrastructure/Admin/EventSourced.php
+[v] ./spec/Model/AdminSpec.php
+[v] ./spec/Infrastructure/Admin/EventSourcedSpec.php
+[v] ./spec/Model/Admin/Exception/AdminNotFoundSpec.php
+[v] ./spec/Infrastructure/Admin/InMemorySpec.php
+[v] ./spec/Model/Admin/Event/AdminCreatedSpec.php
+[v] ./spec/Model/Admin/Event/AdminRemovedSpec.php
+[v] ./spec/Model/Admin/Event/AdminBlockedSpec.php
 ```
 
 ## Installation
