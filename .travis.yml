@@ -1,5 +1,7 @@
 language: php
-sudo: false
+sudo: required
+services:
+  - docker
 git:
   depth: 1
 cache:
@@ -41,6 +43,18 @@ jobs:
       - composer global show kherge/box -q || composer global require --no-interaction --no-progress kherge/box:^2.7
     script:
       - php -d phar.readonly=false $(composer config home)/vendor/bin/box build
+      - if [ $TRAVIS_TAG ]; then
+        docker build . --tag proophgen/proophgen:latest --tag proophgen/proophgen:$TRAVIS_TAG;
+        fi;
+      - if [ $TRAVIS_TAG ]; then
+        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+        fi;
+      - if [ $TRAVIS_TAG ]; then
+        docker push proophgen/proophgen:latest;
+        fi;
+      - if [ $TRAVIS_TAG ]; then
+        docker push proophgen/proophgen:$TRAVIS_TAG;
+        fi;
     deploy:
       provider: releases
       skip_cleanup: true
