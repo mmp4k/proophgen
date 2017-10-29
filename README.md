@@ -12,14 +12,15 @@ Why developers love CRUD? Because it's easy to automate work around it. Why deve
 
 Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains **40 files** (with phpspec tests!) and start coding. No more boilerplates.
 
-You can also use singe command to create your ValueObject, Command.
+You can also use singe command to create your ValueObject, Command and AggregateRoot with Events.
 
 ## Table of Contents 
 
 * [Examples](#examples)  
 * [Create single ValueObject](#create-single-valueobject)
 * [Create single Command](#create-single-command)
-* [Create single AggregateRoot with Events](#create-single-aggregateroot-with-events)  
+* [Create single AggregateRoot with Events](#create-single-aggregateroot-with-events)
+    * [Id Policy](#id-policy)  
 * [Installation](#installation)
 
 ## Examples
@@ -27,6 +28,7 @@ You can also use singe command to create your ValueObject, Command.
 This is your `yaml`
 
 ```
+idPolicy: Ramsey\Uuid\UuidInterface # or string (default value)
 valueObjects:
   - Model\ValueObject\Mail
   - Model\ValueObject\Name
@@ -49,7 +51,7 @@ There is your command to run:
 $ proophgen do
 ```
 
-And there is your result (in v0.1.2):
+And there is your result (since v0.1.4):
 
 ```
 ./src/Infrastructure/Identity/EventSourced.php
@@ -156,7 +158,39 @@ Creating files:
 [v] ./spec/Model/Admin/Event/AdminRemovedSpec.php
 [v] ./spec/Model/Admin/Event/AdminBlockedSpec.php
 ```
+### Id Policy
+
+As default `proophgen` generates all ids as string. If you wish you can change it just running this variant of previous command:
+
+```
+proophgen ar --id-policy="Ramsey\Uuid\UuidInterface" Model/Admin \!AdminCreated AdminRemoved AdminBlocked
+```
 
 ## Installation
 
+There is a few way to use `proophgen`
+
+### 1. You can download .phar file
+
 Go to [releases page on github](https://github.com/mmp4k/proophgen/releases) and download `proophgen.phar`.
+
+```
+mv ~/Downloads/proophgen.phar /usr/local/bin/proophgen
+chmod +x /usr/local/bin/proophgen
+```
+
+### 2. You can use docker
+
+Just run that command:
+
+```
+docker run -v $(pwd):/var/www proophgen/proophgen 
+```
+
+### 3. Composer (not recommended)
+
+You can add `proophgen` directly to your project as `dev` dependency but then your project and `proophgen` will be sharing a whole dependencies and some conflicts can happened.
+
+```
+composer require --dev pilsniak/proophgen
+```
