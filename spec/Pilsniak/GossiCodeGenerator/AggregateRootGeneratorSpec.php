@@ -5,6 +5,7 @@ namespace spec\Pilsniak\GossiCodeGenerator;
 use gossi\codegen\generator\CodeFileGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator;
 use PhpSpec\ObjectBehavior;
+use Pilsniak\GossiCodeGenerator\IdStrategy\StringIdStrategy;
 use Pilsniak\ProophGen\AggregateRootExecuter;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
@@ -20,12 +21,12 @@ class AggregateRootGeneratorSpec extends ObjectBehavior
             'generateReturnTypeHints' => true,
             'declareStrictTypes' => true
         ]);
-        $aggregateRootCodeGenerator = new AggregateRootGenerator\AggregateRootCodeGenerator($generator);
-        $exceptionNotFoundGenerator = new AggregateRootGenerator\AggregateRootExceptionNotFoundGenerator($generator);
-        $eventGenerator = new AggregateRootGenerator\AggregateRootEventGenerator($generator);
-        $repositoryInterfaceGenerator = new AggregateRootGenerator\AggregateRootRepositoryInterfaceGenerator($generator);
-        $repositoryInMemoryGenerator = new AggregateRootGenerator\AggregateRootInMemoryRepository($generator);
-        $repositoryEventSourcedGenerator = new AggregateRootGenerator\AggregateRootEventSourcedRepository($generator);
+        $aggregateRootCodeGenerator = new AggregateRootGenerator\AggregateRootCodeGenerator($generator, new StringIdStrategy());
+        $exceptionNotFoundGenerator = new AggregateRootGenerator\AggregateRootExceptionNotFoundGenerator($generator, new StringIdStrategy());
+        $eventGenerator = new AggregateRootGenerator\AggregateRootEventGenerator($generator, new StringIdStrategy());
+        $repositoryInterfaceGenerator = new AggregateRootGenerator\AggregateRootRepositoryInterfaceGenerator($generator, new StringIdStrategy());
+        $repositoryInMemoryGenerator = new AggregateRootGenerator\AggregateRootInMemoryRepository($generator, new StringIdStrategy());
+        $repositoryEventSourcedGenerator = new AggregateRootGenerator\AggregateRootEventSourcedRepository($generator, new StringIdStrategy());
 
         $this->beConstructedWith($aggregateRootCodeGenerator, $exceptionNotFoundGenerator, $eventGenerator, $repositoryInterfaceGenerator, $repositoryInMemoryGenerator, $repositoryEventSourcedGenerator);
     }

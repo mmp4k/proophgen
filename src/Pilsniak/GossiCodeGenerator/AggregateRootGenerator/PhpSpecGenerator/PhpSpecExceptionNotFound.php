@@ -5,6 +5,7 @@ namespace Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator;
 use gossi\codegen\generator\CodeFileGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\FileToSave;
 
@@ -14,10 +15,15 @@ class PhpSpecExceptionNotFound
      * @var CodeFileGenerator
      */
     private $codeFileGenerator;
+    /**
+     * @var IdStrategy
+     */
+    private $idStrategy;
 
-    public function __construct(CodeFileGenerator $codeFileGenerator)
+    public function __construct(CodeFileGenerator $codeFileGenerator, IdStrategy $idStrategy)
     {
         $this->codeFileGenerator = $codeFileGenerator;
+        $this->idStrategy = $idStrategy;
     }
 
     public function execute(AggregateRoot $aggregateRoot): FileToSave
@@ -44,6 +50,8 @@ class PhpSpecExceptionNotFound
                 ->setBody($this->generateBodyForCreateMethod($aggregateRoot))
         );
 
+        $this->idStrategy->phpSpecIdGenerator($phpClass);
+        $this->idStrategy->modifyPhpClass($phpClass);
         return $this->codeFileGenerator->generate($phpClass);
     }
 
@@ -54,8 +62,8 @@ class PhpSpecExceptionNotFound
 
     private function generateBodyForCreateMethod(AggregateRoot $aggregateRoot): string
     {
-        $body = '$this->beConstructedThrough(\'withId\', [2]);' . "\n";
-        $body .= '$this->getMessage()->shouldBe(\''.$aggregateRoot->className().' with ID 2 does not exists.\');';
+        $body = '$this->beConstructedThrough(\'withId\', [$this->_id()]);' . "\n";
+        $body .= '$this->getMessage()->shouldBe(\''.$aggregateRoot->className().' with ID id does not exists.\');';
 
         return $body;
     }

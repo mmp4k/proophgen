@@ -8,6 +8,7 @@ use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
 use gossi\codegen\model\PhpParameter;
 use gossi\codegen\model\PhpProperty;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
 use Pilsniak\ProophGen\Model\FileToSave;
@@ -18,10 +19,15 @@ class AggregateRootCodeGenerator
      * @var CodeFileGenerator
      */
     private $codeGenerator;
+    /**
+     * @var IdStrategy
+     */
+    private $idStrategy;
 
-    public function __construct(CodeFileGenerator $codeGenerator)
+    public function __construct(CodeFileGenerator $codeGenerator, IdStrategy $idStrategy)
     {
         $this->codeGenerator = $codeGenerator;
+        $this->idStrategy = $idStrategy;
     }
 
     public function execute(AggregateRoot $aggregateRoot): FileToSave
@@ -61,12 +67,12 @@ class AggregateRootCodeGenerator
         );
         $class->setMethod(
             PhpMethod::create('id')
-                ->setType('string')
+                ->setType($this->idStrategy->type())
                 ->setBody('return $this->id;')
         );
         $class->setMethod(
             PhpMethod::create('aggregateId')
-                ->setBody('return $this->id;')
+                ->setBody('return '.$this->idStrategy->convertToString('$this->id()').';')
                 ->setType('string')
                 ->setVisibility('protected')
         );
@@ -96,6 +102,7 @@ class AggregateRootCodeGenerator
             );
         }
 
+        $this->idStrategy->modifyPhpClass($class);
         return $this->codeGenerator->generate($class);
     }
 
@@ -110,7 +117,7 @@ class AggregateRootCodeGenerator
             PhpMethod::create($event->aggregateMethodName())
                 ->setStatic(true)
                 ->addParameter(PhpParameter::create($event->guardVariableName())->setType($event->guardName()))
-                ->addParameter(PhpParameter::create('id')->setType('string'))
+                ->addParameter(PhpParameter::create('id')->setType($this->idStrategy->type()))
                 ->setBody($body)
                 ->setType('self')
         );
@@ -133,6 +140,6 @@ class AggregateRootCodeGenerator
         if (!$event->isCreator()) {
             return '';
         }
-        return '$this->id = $event->aggregateId();';
+        return '$this->id = $event->id();';
     }
 }

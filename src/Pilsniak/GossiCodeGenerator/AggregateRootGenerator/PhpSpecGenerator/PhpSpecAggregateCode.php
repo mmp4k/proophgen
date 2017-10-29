@@ -5,6 +5,7 @@ namespace Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator;
 use gossi\codegen\generator\CodeFileGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
 use Pilsniak\ProophGen\Model\FileToSave;
@@ -15,10 +16,15 @@ class PhpSpecAggregateCode
      * @var CodeFileGenerator
      */
     private $codeFileGenerator;
+    /**
+     * @var IdStrategy
+     */
+    private $idStrategy;
 
-    public function __construct(CodeFileGenerator $codeFileGenerator)
+    public function __construct(CodeFileGenerator $codeFileGenerator, IdStrategy $idStrategy)
     {
         $this->codeFileGenerator = $codeFileGenerator;
+        $this->idStrategy = $idStrategy;
     }
 
     public function execute(AggregateRoot $aggregateRoot): FileToSave
@@ -37,14 +43,14 @@ class PhpSpecAggregateCode
 
         $phpClass->setMethod(
             PhpMethod::create('it_returns_id')
-                ->setBody('$this->id()->shouldBe(\'id\');')
+                ->setBody('$this->id()->shouldBe($this->_id());')
         );
 
         foreach ($aggregateRoot->events() as $event) {
             if ($event->isCreator()) {
                 $phpClass->setMethod(
                     PhpMethod::create('let')
-                        ->setBody('$this->beConstructedThrough(\''.$event->aggregateMethodName().'\', [\'id\']);')
+                        ->setBody('$this->beConstructedThrough(\''.$event->aggregateMethodName().'\', [$this->_id()]);')
                 );
             } else {
                 $phpClass->setMethod(
@@ -55,6 +61,8 @@ class PhpSpecAggregateCode
 
         }
 
+        $this->idStrategy->phpSpecIdGenerator($phpClass);
+        $this->idStrategy->modifyPhpClass($phpClass);
         return $this->codeFileGenerator->generate($phpClass);
     }
 
@@ -66,8 +74,8 @@ class PhpSpecAggregateCode
     private function generateBodyForEvent(AggregateRoot $aggregateRoot, Event $event): string
     {
         if ($event->isCreator()) {
-            $body = '$this->beConstructedThrough(\''.$event->aggregateMethodName().'\', [\'id\']);' . "\n";
-            $body .= '$this->id()->shouldBe(\'id\');';
+            $body = '$this->beConstructedThrough(\''.$event->aggregateMethodName().'\', [$this->_id()]);' . "\n";
+            $body .= '$this->id()->shouldBe($this->_id());';
 
             return $body;
         }

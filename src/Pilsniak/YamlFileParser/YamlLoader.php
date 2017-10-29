@@ -6,6 +6,7 @@ use Pilsniak\ProophGen\FileParser;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Command;
 use Pilsniak\ProophGen\Model\Event;
+use Pilsniak\ProophGen\Model\IdPolicy;
 use Pilsniak\ProophGen\Model\ValueObject;
 use Symfony\Component\Yaml\Yaml;
 
@@ -51,5 +52,10 @@ class YamlLoader implements FileParser
             $return[] = new AggregateRoot($aggregateRoot, $eventsObjects);
         }
         return $return;
+    }
+
+    public function idPolicy(): IdPolicy
+    {
+        return new IdPolicy(isset($this->yaml['idPolicy']) ? $this->yaml['idPolicy'] : 'string');
     }
 }

@@ -5,13 +5,14 @@ namespace spec\Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerat
 use gossi\codegen\generator\CodeFileGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecInMemoryRepository;
 use PhpSpec\ObjectBehavior;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
 use Prophecy\Argument;
 
 class PhpSpecInMemoryRepositorySpec extends ObjectBehavior
 {
-    function let()
+    function let(IdStrategy $idStrategy)
     {
         $generator = new CodeFileGenerator([
             'generateDocblock' => false,
@@ -20,11 +21,19 @@ class PhpSpecInMemoryRepositorySpec extends ObjectBehavior
             'declareStrictTypes' => true
         ]);
 
-        $this->beConstructedWith($generator);
+        $this->beConstructedWith($generator, $idStrategy);
     }
-    function it_generates_code()
+    function it_generates_code(IdStrategy $idStrategy)
     {
-        $content = "<?php
+        $aggregateRoot = new AggregateRoot('Model\User', [new Event('UserRegistered')]);
+        $idStrategy->modifyPhpClass(Argument::any())->shouldBeCalled();
+        $idStrategy->phpSpecIdGenerator(Argument::any())->shouldBeCalled();
+        $this->execute($aggregateRoot)->filename()->shouldBe('./spec/Infrastructure/User/InMemorySpec.php');
+        $this->execute($aggregateRoot)->fileContent()->shouldBe($this->expectedContent());
+    }
+
+    protected function expectedContent(): string {
+        return "<?php
 declare(strict_types=1);
 
 namespace spec\Infrastructure\User;
@@ -42,16 +51,16 @@ class InMemorySpec extends ObjectBehavior {
 
 \tpublic function it_can_get_user(User \$user) {
 \t\t\$this->getWrappedObject()->data['id'] = \$user->getWrappedObject();
-\t\t\$this->get('id');
+\t\t\$this->get(\$this->_id());
 \t}
 
 \tpublic function it_can_save_user(User \$user) {
-\t\t\$user->id()->willReturn('id');
+\t\t\$user->id()->willReturn(\$this->_id());
 \t\t\$this->save(\$user);
 \t}
 
 \tpublic function it_throw_exception_if_can_not_get_user() {
-\t\t\$this->shouldThrow(UserNotFound::class)->during('get', ['id']);
+\t\t\$this->shouldThrow(UserNotFound::class)->during('get', [\$this->_id()]);
 \t}
 
 \tpublic function let() {
@@ -59,9 +68,5 @@ class InMemorySpec extends ObjectBehavior {
 \t}
 }
 ";
-
-        $aggregateRoot = new AggregateRoot('Model\User', [new Event('UserRegistered')]);
-        $this->execute($aggregateRoot)->filename()->shouldBe('./spec/Infrastructure/User/InMemorySpec.php');
-        $this->execute($aggregateRoot)->fileContent()->shouldBe($content);
     }
 }

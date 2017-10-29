@@ -5,13 +5,14 @@ namespace spec\Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerat
 use gossi\codegen\generator\CodeFileGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecEvent;
 use PhpSpec\ObjectBehavior;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
 use Prophecy\Argument;
 
 class PhpSpecEventSpec extends ObjectBehavior
 {
-    function let()
+    function let(IdStrategy $idStrategy)
     {
         $generator = new CodeFileGenerator([
             'generateDocblock' => false,
@@ -20,11 +21,21 @@ class PhpSpecEventSpec extends ObjectBehavior
             'declareStrictTypes' => true
         ]);
 
-        $this->beConstructedWith($generator);
+        $this->beConstructedWith($generator, $idStrategy);
     }
-    function it_generates_code()
+    function it_generates_code(IdStrategy $idStrategy)
     {
-        $content = "<?php
+        $event = new Event('UserRegistered');
+        $aggregateRoot = new AggregateRoot('Model\User', [$event]);
+        $idStrategy->modifyPhpClass(Argument::any())->shouldBeCalled();
+        $idStrategy->phpSpecIdGenerator(Argument::any())->shouldBeCalled();
+        $this->execute($aggregateRoot, $event)->filename()->shouldBe('./spec/Model/User/Event/UserRegisteredSpec.php');
+        $this->execute($aggregateRoot, $event)->fileContent()->shouldBe($this->expectedContent());
+    }
+
+    protected function expectedContent(): string
+    {
+        return "<?php
 declare(strict_types=1);
 
 namespace spec\Model\User\Event;
@@ -36,15 +47,10 @@ use Prophecy\Argument;
 class UserRegisteredSpec extends ObjectBehavior {
 
 \tpublic function it_is_created_with_id() {
-\t\t\$this->beConstructedThrough('create', ['id']);
+\t\t\$this->beConstructedThrough('create', [\$this->_id()]);
 \t\t\$this->aggregateId()->shouldBe('id');
 \t}
 }
 ";
-
-        $event = new Event('UserRegistered');
-        $aggregateRoot = new AggregateRoot('Model\User', [$event]);
-        $this->execute($aggregateRoot, $event)->filename()->shouldBe('./spec/Model/User/Event/UserRegisteredSpec.php');
-        $this->execute($aggregateRoot, $event)->fileContent()->shouldBe($content);
     }
 }

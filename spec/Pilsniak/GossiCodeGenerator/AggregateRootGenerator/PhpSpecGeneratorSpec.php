@@ -5,6 +5,8 @@ namespace spec\Pilsniak\GossiCodeGenerator\AggregateRootGenerator;
 use gossi\codegen\generator\CodeFileGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator;
 use PhpSpec\ObjectBehavior;
+use Pilsniak\GossiCodeGenerator\IdStrategy\StringIdStrategy;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
 use Pilsniak\ProophGen\ProophGenerator\AggregateRootGenerator\PhpSpecAggregateRootExecuter;
@@ -22,12 +24,14 @@ class PhpSpecGeneratorSpec extends ObjectBehavior
             'declareStrictTypes' => true
         ]);
 
+        $idStrategy = new StringIdStrategy();
+
         $this->beConstructedWith(
-            new PhpSpecGenerator\PhpSpecAggregateCode($generator),
-            new PhpSpecGenerator\PhpSpecEventSourced($generator),
-            new PhpSpecGenerator\PhpSpecEvent($generator),
-            new PhpSpecGenerator\PhpSpecExceptionNotFound($generator),
-            new PhpSpecGenerator\PhpSpecInMemoryRepository($generator)
+            new PhpSpecGenerator\PhpSpecAggregateCode($generator, $idStrategy),
+            new PhpSpecGenerator\PhpSpecEventSourced($generator, $idStrategy),
+            new PhpSpecGenerator\PhpSpecEvent($generator, $idStrategy),
+            new PhpSpecGenerator\PhpSpecExceptionNotFound($generator, $idStrategy),
+            new PhpSpecGenerator\PhpSpecInMemoryRepository($generator, $idStrategy)
         );
     }
 

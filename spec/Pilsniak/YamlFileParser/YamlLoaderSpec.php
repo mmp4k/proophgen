@@ -6,16 +6,19 @@ use Pilsniak\ProophGen\FileParser;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Command;
 use Pilsniak\ProophGen\Model\Event;
+use Pilsniak\ProophGen\Model\IdPolicy;
 use Pilsniak\ProophGen\Model\ValueObject;
 use Pilsniak\YamlFileParser\YamlLoader;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
+use spec\Pilsniak\ProophGen\Model\IdPolicySpec;
 
 class YamlLoaderSpec extends ObjectBehavior
 {
     function let()
     {
-        $fileContent = 'valueObjects:
+        $fileContent = 'idPolicy: Ramsey\Uuid\UuidInterface
+valueObjects:
   - Model\ValueObject\Mail
   - Model\ValueObject\Name
   - Model\ValueObject\Password
@@ -59,5 +62,10 @@ aggregateRoots:
         $this->aggregateRoots()[0]->events()[0]->isCreator()->shouldBe(true);
         $this->aggregateRoots()[1]->events()->shouldBeArray();
         $this->aggregateRoots()[1]->events()->shouldHaveCount(3);
+    }
+
+    function it_returns_id_policy()
+    {
+        $this->idPolicy()->shouldImplement(IdPolicy::class);
     }
 }

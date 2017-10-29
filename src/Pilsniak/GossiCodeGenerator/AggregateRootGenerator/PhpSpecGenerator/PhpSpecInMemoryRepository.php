@@ -6,6 +6,7 @@ use gossi\codegen\generator\CodeFileGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
 use gossi\codegen\model\PhpParameter;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\FileToSave;
 
@@ -15,10 +16,15 @@ class PhpSpecInMemoryRepository
      * @var CodeFileGenerator
      */
     private $codeFileGenerator;
+    /**
+     * @var IdStrategy
+     */
+    private $idStrategy;
 
-    public function __construct(CodeFileGenerator $codeFileGenerator)
+    public function __construct(CodeFileGenerator $codeFileGenerator, IdStrategy $idStrategy)
     {
         $this->codeFileGenerator = $codeFileGenerator;
+        $this->idStrategy = $idStrategy;
     }
 
     public function execute(AggregateRoot $aggregateRoot): FileToSave
@@ -62,9 +68,11 @@ class PhpSpecInMemoryRepository
         );
         $phpClass->setMethod(
             PhpMethod::create('it_throw_exception_if_can_not_get_'.$aggregateRoot->variableName())
-                ->setBody('$this->shouldThrow('.$aggregateRoot->exceptionClassName().'::class)->during(\'get\', [\'id\']);')
+                ->setBody('$this->shouldThrow('.$aggregateRoot->exceptionClassName().'::class)->during(\'get\', [$this->_id()]);')
         );
 
+        $this->idStrategy->modifyPhpClass($phpClass);
+        $this->idStrategy->phpSpecIdGenerator($phpClass);
         return $this->codeFileGenerator->generate($phpClass);
     }
 
@@ -76,14 +84,14 @@ class PhpSpecInMemoryRepository
     private function generateBodyForGetMethod(AggregateRoot $aggregateRoot): string
     {
         $body = '$this->getWrappedObject()->data[\'id\'] = $'.$aggregateRoot->variableName().'->getWrappedObject();' . "\n";
-        $body .= '$this->get(\'id\');';
+        $body .= '$this->get($this->_id());';
 
         return $body;
     }
 
     private function generateBodyForSaveMethod(AggregateRoot $aggregateRoot): string
     {
-        $body = '$'.$aggregateRoot->variableName().'->id()->willReturn(\'id\');' . "\n";
+        $body = '$'.$aggregateRoot->variableName().'->id()->willReturn($this->_id());' . "\n";
         $body .= '$this->save($'.$aggregateRoot->variableName().');';
 
         return $body;

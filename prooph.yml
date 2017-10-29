@@ -1,3 +1,4 @@
+idPolicy: Ramsey\Uuid\UuidInterface
 valueObjects:
   - Model\ValueObject\Mail
   - Model\ValueObject\Name

@@ -6,6 +6,7 @@ use gossi\codegen\generator\CodeFileGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
 use gossi\codegen\model\PhpParameter;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\FileToSave;
 
@@ -15,10 +16,15 @@ class PhpSpecEventSourced
      * @var CodeFileGenerator
      */
     private $codeFileGenerator;
+    /**
+     * @var IdStrategy
+     */
+    private $idStrategy;
 
-    public function __construct(CodeFileGenerator $codeFileGenerator)
+    public function __construct(CodeFileGenerator $codeFileGenerator, IdStrategy $idStrategy)
     {
         $this->codeFileGenerator = $codeFileGenerator;
+        $this->idStrategy = $idStrategy;
     }
 
     public function execute(AggregateRoot $aggregateRoot): FileToSave
@@ -83,6 +89,8 @@ class PhpSpecEventSourced
                 ->setBody($this->generateBodyForGetExceptionMethod($aggregateRoot))
         );
 
+        $this->idStrategy->modifyPhpClass($phpClass);
+        $this->idStrategy->phpSpecIdGenerator($phpClass);
         return $this->codeFileGenerator->generate($phpClass);
     }
 
@@ -111,7 +119,7 @@ class PhpSpecEventSourced
     {
         $body = '$repository->getAggregateRoot(\'id\')->shouldBeCalled();' . "\n";
         $body .= '$repository->getAggregateRoot(\'id\')->willReturn($'.$aggregateRoot->variableName().');' . "\n";
-        $body .= '$this->get(\'id\')->shouldBe($'.$aggregateRoot->variableName().');' . "\n";
+        $body .= '$this->get($this->_id())->shouldBe($'.$aggregateRoot->variableName().');' . "\n";
 
         return $body;
     }
@@ -120,7 +128,7 @@ class PhpSpecEventSourced
     {
         $body = '$repository->getAggregateRoot(\'id\')->shouldBeCalled();' . "\n";
         $body .= '$repository->getAggregateRoot(\'id\')->willReturn(null);' . "\n";
-        $body .= '$this->shouldThrow('.$aggregateRoot->exceptionClassName().'::class)->during(\'get\', [\'id\']);' . "\n";
+        $body .= '$this->shouldThrow('.$aggregateRoot->exceptionClassName().'::class)->during(\'get\', [$this->_id()]);' . "\n";
 
         return $body;
     }

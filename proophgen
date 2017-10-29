@@ -10,7 +10,7 @@ try {
 
 use Symfony\Component\Console\Application;
 
-$application = new Application('proophgen', '0.1.6');
+$application = new Application('proophgen', '0.1.8');
 
 $application->add(new \Pilsniak\Command\DoCommand());
 $application->add(new \Pilsniak\Command\ValueObjectCommand());

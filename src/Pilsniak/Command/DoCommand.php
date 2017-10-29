@@ -13,6 +13,8 @@ use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootInMemoryRepo
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootRepositoryInterfaceGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator;
 use Pilsniak\GossiCodeGenerator\CommandGenerator\PhpSpecCommandGenerator;
+use Pilsniak\GossiCodeGenerator\IdStrategy\RamseyUuidIdStrategy;
+use Pilsniak\GossiCodeGenerator\IdStrategy\StringIdStrategy;
 use Pilsniak\GossiCodeGenerator\ValueObjectGenerator\PhpSpecValueObjectGenerator;
 use Pilsniak\ProophGen\ProophGenerator;
 use Pilsniak\ProophGen\ProophGenerator\AggregateRootGenerator;
@@ -56,21 +58,27 @@ class DoCommand extends Command
             new PhpSpecValueObjectGenerator(new PhpSpecValueObjectGenerator\PhpSpecValueObjectGenerator($codeFileGenerator))
         );
 
+        $idStrategy = new StringIdStrategy();
+
+        if ($loader->idPolicy()->name() === 'Ramsey\Uuid\UuidInterface') {
+            $idStrategy = new RamseyUuidIdStrategy();
+        }
+
         /* Aggregate Root Generator */
-        $aggregateRootCodeGenerator = new AggregateRootCodeGenerator($codeFileGenerator);
-        $aggregateRootEventGenerator = new AggregateRootEventGenerator($codeFileGenerator);
-        $aggregateRootExceptionNotFoundGenerator = new AggregateRootExceptionNotFoundGenerator($codeFileGenerator);
-        $aggregateRootRepositoryInterfaceGenerator = new AggregateRootRepositoryInterfaceGenerator($codeFileGenerator);
-        $aggregateRootRepositoryInMemoryGenerator = new AggregateRootInMemoryRepository($codeFileGenerator);
-        $aggregateRootRepositoryEventSourcedGenerator = new AggregateRootEventSourcedRepository($codeFileGenerator);
+        $aggregateRootCodeGenerator = new AggregateRootCodeGenerator($codeFileGenerator, $idStrategy);
+        $aggregateRootEventGenerator = new AggregateRootEventGenerator($codeFileGenerator, $idStrategy);
+        $aggregateRootExceptionNotFoundGenerator = new AggregateRootExceptionNotFoundGenerator($codeFileGenerator, $idStrategy);
+        $aggregateRootRepositoryInterfaceGenerator = new AggregateRootRepositoryInterfaceGenerator($codeFileGenerator, $idStrategy);
+        $aggregateRootRepositoryInMemoryGenerator = new AggregateRootInMemoryRepository($codeFileGenerator, $idStrategy);
+        $aggregateRootRepositoryEventSourcedGenerator = new AggregateRootEventSourcedRepository($codeFileGenerator, $idStrategy);
         $rootGenerator = new AggregateRootGenerator(
             new \Pilsniak\GossiCodeGenerator\AggregateRootGenerator($aggregateRootCodeGenerator, $aggregateRootExceptionNotFoundGenerator, $aggregateRootEventGenerator, $aggregateRootRepositoryInterfaceGenerator, $aggregateRootRepositoryInMemoryGenerator, $aggregateRootRepositoryEventSourcedGenerator),
             new PhpSpecGenerator(
-                new PhpSpecGenerator\PhpSpecAggregateCode($codeFileGenerator),
-                new PhpSpecGenerator\PhpSpecEventSourced($codeFileGenerator),
-                new PhpSpecGenerator\PhpSpecEvent($codeFileGenerator),
-                new PhpSpecGenerator\PhpSpecExceptionNotFound($codeFileGenerator),
-                new PhpSpecGenerator\PhpSpecInMemoryRepository($codeFileGenerator)
+                new PhpSpecGenerator\PhpSpecAggregateCode($codeFileGenerator, $idStrategy),
+                new PhpSpecGenerator\PhpSpecEventSourced($codeFileGenerator, $idStrategy),
+                new PhpSpecGenerator\PhpSpecEvent($codeFileGenerator, $idStrategy),
+                new PhpSpecGenerator\PhpSpecExceptionNotFound($codeFileGenerator, $idStrategy),
+                new PhpSpecGenerator\PhpSpecInMemoryRepository($codeFileGenerator, $idStrategy)
             )
         );
 
