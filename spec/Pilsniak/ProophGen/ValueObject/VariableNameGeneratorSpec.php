@@ -21,4 +21,13 @@ class VariableNameGeneratorSpec extends ObjectBehavior
         $this->variable()->shouldBe('$mail');
         $this->property()->shouldBe('$this->mail');
     }
+
+    function it_returns_as_camel_case()
+    {
+        $valueObject = new ValueObject('Model\ValueObject\SomeMail');
+        $this->beConstructedWith($valueObject);
+        $this->variableName()->shouldBe('someMail');
+        $this->variable()->shouldBe('$someMail');
+        $this->property()->shouldBe('$this->someMail');
+    }
 }

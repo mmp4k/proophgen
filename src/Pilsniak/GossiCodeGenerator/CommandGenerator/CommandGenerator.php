@@ -6,7 +6,9 @@ use gossi\codegen\generator\CodeFileGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpInterface;
 use gossi\codegen\model\PhpMethod;
+use gossi\codegen\model\PhpParameter;
 use gossi\codegen\model\PhpTrait;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\Command;
 use Pilsniak\ProophGen\Model\FileToSave;
 
@@ -16,10 +18,15 @@ class CommandGenerator
      * @var CodeFileGenerator
      */
     private $codeFileGenerator;
+    /**
+     * @var IdStrategy
+     */
+    private $idStrategy;
 
-    public function __construct(CodeFileGenerator $codeFileGenerator)
+    public function __construct(CodeFileGenerator $codeFileGenerator, IdStrategy $idStrategy)
     {
         $this->codeFileGenerator = $codeFileGenerator;
+        $this->idStrategy = $idStrategy;
     }
 
     public function execute(Command $command): FileToSave
@@ -40,9 +47,16 @@ class CommandGenerator
         $class->setMethod(
             PhpMethod::create('withData')
                 ->setStatic(true)
-                ->setBody('return new self([]);')
+                ->setBody('return new self([\'id\' => $id]);')
                 ->setType('self')
+                ->addParameter(PhpParameter::create('id')->setType($this->idStrategy->type()))
         );
+        $class->setMethod(
+            PhpMethod::create('id')
+                ->setType($this->idStrategy->type())
+                ->setBody('return $this->payload[\'id\'];')
+        );
+        $this->idStrategy->modifyPhpClass($class);
 
         return $this->codeFileGenerator->generate($class);
     }

@@ -44,12 +44,18 @@ class DoCommand extends Command
 
         $loader = new YamlLoader(file_get_contents('prooph.yml'));
 
+        $idStrategy = new StringIdStrategy();
+
+        if ($loader->idPolicy()->name() === 'Ramsey\Uuid\UuidInterface') {
+            $idStrategy = new RamseyUuidIdStrategy();
+        }
+
         /* Command Generator */
         $commandHandlerCodeGenerator = new \Pilsniak\GossiCodeGenerator\CommandGenerator\CommandHandlerGenerator($codeFileGenerator);
-        $commandCodeGenerator = new \Pilsniak\GossiCodeGenerator\CommandGenerator\CommandGenerator($codeFileGenerator);
+        $commandCodeGenerator = new \Pilsniak\GossiCodeGenerator\CommandGenerator\CommandGenerator($codeFileGenerator, $idStrategy);
         $commandGenerator = new CommandGenerator(
             new \Pilsniak\GossiCodeGenerator\CommandGenerator($commandHandlerCodeGenerator, $commandCodeGenerator),
-            new PhpSpecCommandGenerator(new PhpSpecCommandGenerator\PhpSpecCommandGenerator($codeFileGenerator), new PhpSpecCommandGenerator\PhpSpecCommandHandlerGenerator($codeFileGenerator))
+            new PhpSpecCommandGenerator(new PhpSpecCommandGenerator\PhpSpecCommandGenerator($codeFileGenerator, $idStrategy), new PhpSpecCommandGenerator\PhpSpecCommandHandlerGenerator($codeFileGenerator))
             );
 
         /* Value Object Generator */
@@ -57,12 +63,6 @@ class DoCommand extends Command
             new \Pilsniak\GossiCodeGenerator\ValueObjectGenerator(new \Pilsniak\GossiCodeGenerator\ValueObjectGenerator\ValueObjectGenerator($codeFileGenerator)),
             new PhpSpecValueObjectGenerator(new PhpSpecValueObjectGenerator\PhpSpecValueObjectGenerator($codeFileGenerator))
         );
-
-        $idStrategy = new StringIdStrategy();
-
-        if ($loader->idPolicy()->name() === 'Ramsey\Uuid\UuidInterface') {
-            $idStrategy = new RamseyUuidIdStrategy();
-        }
 
         /* Aggregate Root Generator */
         $aggregateRootCodeGenerator = new AggregateRootCodeGenerator($codeFileGenerator, $idStrategy);

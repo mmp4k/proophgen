@@ -5,7 +5,9 @@ namespace spec\Pilsniak\GossiCodeGenerator;
 use gossi\codegen\generator\CodeFileGenerator;
 use Pilsniak\GossiCodeGenerator\CommandGenerator;
 use PhpSpec\ObjectBehavior;
+use Pilsniak\GossiCodeGenerator\IdStrategy\StringIdStrategy;
 use Pilsniak\ProophGen\CommandExecuter;
+use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\Command;
 use Prophecy\Argument;
 
@@ -13,6 +15,7 @@ class CommandGeneratorSpec extends ObjectBehavior
 {
     function let()
     {
+        $idStrategy = new StringIdStrategy();
         $generator = new CodeFileGenerator([
             'generateDocblock' => false,
             'generateScalarTypeHints' => true,
@@ -20,7 +23,7 @@ class CommandGeneratorSpec extends ObjectBehavior
             'declareStrictTypes' => true
         ]);
         $commandHandlerGenerator = new CommandGenerator\CommandHandlerGenerator($generator);
-        $commandGenerator = new CommandGenerator\CommandGenerator($generator);
+        $commandGenerator = new CommandGenerator\CommandGenerator($generator, $idStrategy);
 
         $this->beConstructedWith($commandHandlerGenerator, $commandGenerator);
     }

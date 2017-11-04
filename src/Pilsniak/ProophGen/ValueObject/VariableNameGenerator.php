@@ -16,17 +16,17 @@ class VariableNameGenerator
         $this->valueObject = $valueObject;
     }
 
-    public function variableName()
+    public function variableName(): string
     {
-        return strtolower($this->valueObject->className());
+        return strtolower($this->valueObject->className()[0]).substr($this->valueObject->className(), 1);
     }
 
-    public function variable()
+    public function variable(): string
     {
         return '$'.$this->variableName();
     }
 
-    public function property()
+    public function property(): string
     {
         return '$this->'.$this->variableName();
     }
