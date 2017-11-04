@@ -50,6 +50,8 @@ class UserSpec extends ObjectBehavior {
         $aggregateRoot = new AggregateRoot('Model\User', [new Event('UserRegistered')]);
         $idStrategy->modifyPhpClass(Argument::any())->shouldBeCalled();
         $idStrategy->phpSpecIdGenerator(Argument::any())->shouldBeCalled();
+        $idStrategy->value()->willReturn('id');
+        $idStrategy->convertToString(Argument::any())->willReturnArgument(0);
         $this->execute($aggregateRoot)->filename()->shouldBe('./spec/Model/UserSpec.php');
         $this->execute($aggregateRoot)->fileContent()->shouldBe($content);
     }
@@ -80,6 +82,8 @@ class UserSpec extends ObjectBehavior {
         $aggregateRoot = new AggregateRoot('Model\User', [new Event('UserRegistered', true)]);
         $idStrategy->modifyPhpClass(Argument::any())->shouldBeCalled();
         $idStrategy->phpSpecIdGenerator(Argument::any())->shouldBeCalled();
+        $idStrategy->value()->willReturn('id');
+        $idStrategy->convertToString(Argument::any())->willReturnArgument(0);
         $this->execute($aggregateRoot)->filename()->shouldBe('./spec/Model/UserSpec.php');
         $this->execute($aggregateRoot)->fileContent()->shouldBe($content);
     }

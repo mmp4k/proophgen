@@ -83,7 +83,7 @@ class PhpSpecInMemoryRepository
 
     private function generateBodyForGetMethod(AggregateRoot $aggregateRoot): string
     {
-        $body = '$this->getWrappedObject()->data[\'id\'] = $'.$aggregateRoot->variableName().'->getWrappedObject();' . "\n";
+        $body = '$this->getWrappedObject()->data[\''.$this->idStrategy->value().'\'] = $'.$aggregateRoot->variableName().'->getWrappedObject();' . "\n";
         $body .= '$this->get($this->_id());';
 
         return $body;

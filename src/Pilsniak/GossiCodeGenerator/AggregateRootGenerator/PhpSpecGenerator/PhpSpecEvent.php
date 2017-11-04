@@ -59,7 +59,7 @@ class PhpSpecEvent
     private function generateBodyForCreateWithIdMethod(AggregateRoot $aggregateRoot, Event $event): string
     {
         $body = '$this->beConstructedThrough(\'create\', [$this->_id()]);' . "\n";
-        $body .= '$this->aggregateId()->shouldBe(\'id\');';
+        $body .= '$this->aggregateId()->shouldBe(\''.$this->idStrategy->value().'\');';
 
         return $body;
     }

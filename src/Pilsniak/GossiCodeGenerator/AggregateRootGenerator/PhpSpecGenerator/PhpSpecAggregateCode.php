@@ -44,7 +44,7 @@ class PhpSpecAggregateCode
 
         $phpClass->setMethod(
             PhpMethod::create('it_returns_id')
-                ->setBody('$this->id()->shouldBe($this->_id());')
+                ->setBody($this->idStrategy->convertToString('$this->id()').'->shouldBe('.$this->idStrategy->convertToString('$this->_id()').');')
         );
 
         foreach ($aggregateRoot->events() as $event) {

@@ -29,6 +29,7 @@ class PhpSpecEventSpec extends ObjectBehavior
         $aggregateRoot = new AggregateRoot('Model\User', [$event]);
         $idStrategy->modifyPhpClass(Argument::any())->shouldBeCalled();
         $idStrategy->phpSpecIdGenerator(Argument::any())->shouldBeCalled();
+        $idStrategy->value()->willReturn('id');
         $this->execute($aggregateRoot, $event)->filename()->shouldBe('./spec/Model/User/Event/UserRegisteredSpec.php');
         $this->execute($aggregateRoot, $event)->fileContent()->shouldBe($this->expectedContent());
     }

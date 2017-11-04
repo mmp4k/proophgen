@@ -36,4 +36,9 @@ class StringIdStrategy implements IdStrategy
                 ->setBody('return \'id\';')
         );
     }
+
+    public function value(): string
+    {
+        return 'id';
+    }
 }

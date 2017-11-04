@@ -117,8 +117,8 @@ class PhpSpecEventSourced
 
     private function generateBodyForGetMethod(AggregateRoot $aggregateRoot): string
     {
-        $body = '$repository->getAggregateRoot(\'id\')->shouldBeCalled();' . "\n";
-        $body .= '$repository->getAggregateRoot(\'id\')->willReturn($'.$aggregateRoot->variableName().');' . "\n";
+        $body = '$repository->getAggregateRoot(\''.$this->idStrategy->value().'\')->shouldBeCalled();' . "\n";
+        $body .= '$repository->getAggregateRoot(\''.$this->idStrategy->value().'\')->willReturn($'.$aggregateRoot->variableName().');' . "\n";
         $body .= '$this->get($this->_id())->shouldBe($'.$aggregateRoot->variableName().');' . "\n";
 
         return $body;
@@ -126,8 +126,8 @@ class PhpSpecEventSourced
 
     private function generateBodyForGetExceptionMethod(AggregateRoot $aggregateRoot): string
     {
-        $body = '$repository->getAggregateRoot(\'id\')->shouldBeCalled();' . "\n";
-        $body .= '$repository->getAggregateRoot(\'id\')->willReturn(null);' . "\n";
+        $body = '$repository->getAggregateRoot(\''.$this->idStrategy->value().'\')->shouldBeCalled();' . "\n";
+        $body .= '$repository->getAggregateRoot(\''.$this->idStrategy->value().'\')->willReturn(null);' . "\n";
         $body .= '$this->shouldThrow('.$aggregateRoot->exceptionClassName().'::class)->during(\'get\', [$this->_id()]);' . "\n";
 
         return $body;

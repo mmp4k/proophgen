@@ -63,7 +63,7 @@ class PhpSpecExceptionNotFound
     private function generateBodyForCreateMethod(AggregateRoot $aggregateRoot): string
     {
         $body = '$this->beConstructedThrough(\'withId\', [$this->_id()]);' . "\n";
-        $body .= '$this->getMessage()->shouldBe(\''.$aggregateRoot->className().' with ID id does not exists.\');';
+        $body .= '$this->getMessage()->shouldBe(\''.$aggregateRoot->className().' with ID '.$this->idStrategy->value().' does not exists.\');';
 
         return $body;
     }

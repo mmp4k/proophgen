@@ -40,6 +40,7 @@ class RamseyUuidIdStrategy implements IdStrategy
 
     protected function generateBodyForIdPhpSpecGenerator()
     {
+        return "return Uuid::fromString('dd76226a-926d-4603-ab5a-69010722510e');";
         $body = '$prophet = new \Prophecy\Prophet;'."\n";
 
         $body .= '$prophecy = $prophet->prophesize(UuidInterface::class);'."\n";
@@ -48,5 +49,10 @@ class RamseyUuidIdStrategy implements IdStrategy
         $body .= 'return $prophecy;';
 
         return $body;
+    }
+
+    public function value(): string
+    {
+        return 'dd76226a-926d-4603-ab5a-69010722510e';
     }
 }

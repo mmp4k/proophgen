@@ -54,6 +54,8 @@ class RegisterUserSpec extends ObjectBehavior {
 ";
         $idStrategy->modifyPhpClass(Argument::any())->shouldBeCalled();
         $idStrategy->phpSpecIdGenerator(Argument::any())->shouldBeCalled();
+        $idStrategy->value()->willReturn('id');
+        $idStrategy->convertToString(Argument::any())->willReturnArgument(0);
         $command = new Command('Model\Command\RegisterUser');
         $this->execute($command)->filename()->shouldBe('./spec/Model/Command/RegisterUserSpec.php');
         $this->execute($command)->fileContent()->shouldBe($content);

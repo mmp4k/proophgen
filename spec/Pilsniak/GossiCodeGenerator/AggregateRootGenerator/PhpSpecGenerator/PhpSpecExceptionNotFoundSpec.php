@@ -28,6 +28,7 @@ class PhpSpecExceptionNotFoundSpec extends ObjectBehavior
         $aggregateRoot = new AggregateRoot('Model\User', [new Event('UserRegistered')]);
         $idStrategy->modifyPhpClass(Argument::any())->shouldBeCalled();
         $idStrategy->phpSpecIdGenerator(Argument::any())->shouldBeCalled();
+        $idStrategy->value()->willReturn('id');
         $this->execute($aggregateRoot)->filename()->shouldBe('./spec/Model/User/Exception/UserNotFoundSpec.php');
         $this->execute($aggregateRoot)->fileContent()->shouldBe($this->expectedContent());
     }
