@@ -5,6 +5,7 @@ namespace Pilsniak\Command;
 use gossi\codegen\generator\CodeFileGenerator;
 use League\Flysystem\Adapter\Local;
 use Pilsniak\FlySystem\FileSystem;
+use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootEventGuardGenerator;
 use Pilsniak\GossiCodeGenerator\IdStrategy\RamseyUuidIdStrategy;
 use Pilsniak\GossiCodeGenerator\IdStrategy\StringIdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
@@ -69,14 +70,16 @@ class AggregateRootCommand extends Command
         $aggregateRootRepositoryInterfaceGenerator = new AggregateRootRepositoryInterfaceGenerator($codeFileGenerator, $idStrategy);
         $aggregateRootRepositoryInMemoryGenerator = new AggregateRootInMemoryRepository($codeFileGenerator, $idStrategy);
         $aggregateRootRepositoryEventSourcedGenerator = new AggregateRootEventSourcedRepository($codeFileGenerator, $idStrategy);
+        $aggregateRootEventGuardGenerator = new AggregateRootEventGuardGenerator($codeFileGenerator);
         $rootGenerator = new AggregateRootGenerator(
-            new \Pilsniak\GossiCodeGenerator\AggregateRootGenerator($aggregateRootCodeGenerator, $aggregateRootExceptionNotFoundGenerator, $aggregateRootEventGenerator, $aggregateRootRepositoryInterfaceGenerator, $aggregateRootRepositoryInMemoryGenerator, $aggregateRootRepositoryEventSourcedGenerator),
+            new \Pilsniak\GossiCodeGenerator\AggregateRootGenerator($aggregateRootCodeGenerator, $aggregateRootExceptionNotFoundGenerator, $aggregateRootEventGenerator, $aggregateRootRepositoryInterfaceGenerator, $aggregateRootRepositoryInMemoryGenerator, $aggregateRootRepositoryEventSourcedGenerator, $aggregateRootEventGuardGenerator),
             new PhpSpecGenerator(
                 new PhpSpecGenerator\PhpSpecAggregateCode($codeFileGenerator, $idStrategy),
                 new PhpSpecGenerator\PhpSpecEventSourced($codeFileGenerator, $idStrategy),
                 new PhpSpecGenerator\PhpSpecEvent($codeFileGenerator, $idStrategy),
                 new PhpSpecGenerator\PhpSpecExceptionNotFound($codeFileGenerator, $idStrategy),
-                new PhpSpecGenerator\PhpSpecInMemoryRepository($codeFileGenerator, $idStrategy)
+                new PhpSpecGenerator\PhpSpecInMemoryRepository($codeFileGenerator, $idStrategy),
+                new PhpSpecGenerator\PhpSpecEventGuard($codeFileGenerator)
             )
         );
 

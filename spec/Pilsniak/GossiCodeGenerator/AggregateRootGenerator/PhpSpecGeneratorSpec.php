@@ -11,6 +11,7 @@ use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
 use Pilsniak\ProophGen\ProophGenerator\AggregateRootGenerator\PhpSpecAggregateRootExecuter;
 use Prophecy\Argument;
+use spec\Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecEventGuardSpec;
 use spec\Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecExceptionNotFoundSpec;
 
 class PhpSpecGeneratorSpec extends ObjectBehavior
@@ -31,7 +32,8 @@ class PhpSpecGeneratorSpec extends ObjectBehavior
             new PhpSpecGenerator\PhpSpecEventSourced($generator, $idStrategy),
             new PhpSpecGenerator\PhpSpecEvent($generator, $idStrategy),
             new PhpSpecGenerator\PhpSpecExceptionNotFound($generator, $idStrategy),
-            new PhpSpecGenerator\PhpSpecInMemoryRepository($generator, $idStrategy)
+            new PhpSpecGenerator\PhpSpecInMemoryRepository($generator, $idStrategy),
+            new PhpSpecGenerator\PhpSpecEventGuard($generator)
         );
     }
 
@@ -45,6 +47,6 @@ class PhpSpecGeneratorSpec extends ObjectBehavior
         $aggregateRoot = new AggregateRoot('Model\User', [new Event('UserRegistered')]);
         $response = $this->execute($aggregateRoot);
         $response->shouldBeArray();
-        $response->shouldHaveCount(5);
+        $response->shouldHaveCount(6);
     }
 }

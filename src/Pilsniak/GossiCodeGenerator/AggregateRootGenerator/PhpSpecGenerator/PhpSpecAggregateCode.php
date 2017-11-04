@@ -5,6 +5,7 @@ namespace Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator;
 use gossi\codegen\generator\CodeFileGenerator;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\model\PhpMethod;
+use gossi\codegen\model\PhpParameter;
 use Pilsniak\ProophGen\IdStrategy;
 use Pilsniak\ProophGen\Model\AggregateRoot;
 use Pilsniak\ProophGen\Model\Event;
@@ -47,14 +48,17 @@ class PhpSpecAggregateCode
         );
 
         foreach ($aggregateRoot->events() as $event) {
+            $phpClass->addUseStatement($event->guardQualifiedName($aggregateRoot));
             if ($event->isCreator()) {
                 $phpClass->setMethod(
                     PhpMethod::create('let')
-                        ->setBody('$this->beConstructedThrough(\''.$event->aggregateMethodName().'\', [$this->_id()]);')
+                        ->addParameter(PhpParameter::create($event->guardVariableName())->setType($event->guardName()))
+                        ->setBody('$this->beConstructedThrough(\''.$event->aggregateMethodName().'\', [$'.$event->guardVariableName().', $this->_id()]);')
                 );
             } else {
                 $phpClass->setMethod(
                     PhpMethod::create('it_can_' . $event->aggregateMethodName())
+                        ->addParameter(PhpParameter::create($event->guardVariableName())->setType($event->guardName()))
                         ->setBody($this->generateBodyForEvent($aggregateRoot, $event))
                 );
             }
@@ -79,7 +83,7 @@ class PhpSpecAggregateCode
 
             return $body;
         }
-        $body = '$this->'.$event->aggregateMethodName().'();';
+        $body = '$this->'.$event->aggregateMethodName().'($'.$event->guardVariableName().');';
 
         return $body;
     }

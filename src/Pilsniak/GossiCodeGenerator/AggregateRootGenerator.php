@@ -10,6 +10,7 @@ use gossi\codegen\model\PhpParameter;
 use gossi\codegen\model\PhpProperty;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootCodeGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootEventGenerator;
+use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootEventGuardGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootEventSourcedRepository;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootExceptionNotFoundGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootInMemoryRepository;
@@ -45,6 +46,10 @@ class AggregateRootGenerator implements AggregateRootExecuter
      * @var AggregateRootEventSourcedRepository
      */
     private $aggregateRootEventSourcedRepository;
+    /**
+     * @var AggregateRootEventGuardGenerator
+     */
+    private $aggregateRootEventGuardGenerator;
 
     /**
      * @param AggregateRootCodeGenerator $aggregateRootCodeGenerator
@@ -53,13 +58,15 @@ class AggregateRootGenerator implements AggregateRootExecuter
      * @param AggregateRootRepositoryInterfaceGenerator $aggregateRootRepositoryInterfaceGenerator
      * @param AggregateRootInMemoryRepository $aggregateRootInMemoryRepository
      * @param AggregateRootEventSourcedRepository $aggregateRootEventSourcedRepository
+     * @param AggregateRootEventGuardGenerator $aggregateRootEventGuardGenerator
      */
     public function __construct(AggregateRootCodeGenerator $aggregateRootCodeGenerator,
                                 AggregateRootExceptionNotFoundGenerator $aggregateRootExceptionNotFoundGenerator,
                                 AggregateRootEventGenerator $aggregateRootEventGenerator,
                                 AggregateRootRepositoryInterfaceGenerator $aggregateRootRepositoryInterfaceGenerator,
                                 AggregateRootInMemoryRepository $aggregateRootInMemoryRepository,
-                                AggregateRootEventSourcedRepository $aggregateRootEventSourcedRepository)
+                                AggregateRootEventSourcedRepository $aggregateRootEventSourcedRepository,
+                                AggregateRootEventGuardGenerator $aggregateRootEventGuardGenerator)
     {
         $this->aggregateRootCodeGenerator = $aggregateRootCodeGenerator;
         $this->aggregateRootExceptionNotFoundGenerator = $aggregateRootExceptionNotFoundGenerator;
@@ -67,6 +74,7 @@ class AggregateRootGenerator implements AggregateRootExecuter
         $this->aggregateRootRepositoryInterfaceGenerator = $aggregateRootRepositoryInterfaceGenerator;
         $this->aggregateRootInMemoryRepository = $aggregateRootInMemoryRepository;
         $this->aggregateRootEventSourcedRepository = $aggregateRootEventSourcedRepository;
+        $this->aggregateRootEventGuardGenerator = $aggregateRootEventGuardGenerator;
     }
 
     public function execute(AggregateRoot $aggregateRoot): array
@@ -79,6 +87,7 @@ class AggregateRootGenerator implements AggregateRootExecuter
 
         foreach ($aggregateRoot->events() as $event) {
             $return[] = $this->aggregateRootEventGenerator->execute($aggregateRoot, $event);
+            $return[] = $this->aggregateRootEventGuardGenerator->execute($aggregateRoot, $event);
         }
 
         $return[] = $this->aggregateRootInMemoryRepository->execute($aggregateRoot);

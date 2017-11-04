@@ -108,9 +108,9 @@ class AggregateRootCodeGenerator
 
     private function creatorEventMethod(PhpClass $class, Event $event)
     {
-        $body = '$' . $event->guardVariableName().'->throwExceptionIfNotPossible();' . "\n\n";
-        $body .= '$self = new self;' . "\n";
-        $body .= '$self->recordThat('.$event->name().'::create($id));'."\n";
+        $body = '$self = new self;' . "\n";
+        $body .= '$self->recordThat('.$event->name().'::create($id));'."\n\n";
+        $body .= '$' . $event->guardVariableName().'->throwExceptionIfNotPossible($self);' . "\n";
         $body .= 'return $self;';
 
         $class->setMethod(

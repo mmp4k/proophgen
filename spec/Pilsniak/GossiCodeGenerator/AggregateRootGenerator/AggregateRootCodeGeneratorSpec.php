@@ -103,10 +103,10 @@ class User extends AggregateRoot {
 \tprivate \$id;
 
 \tpublic static function registerUser(UserRegisteredGuard \$userRegisteredGuard, string \$id): self {
-\t\t\$userRegisteredGuard->throwExceptionIfNotPossible();
-
 \t\t\$self = new self;
 \t\t\$self->recordThat(UserRegistered::create(\$id));
+
+\t\t\$userRegisteredGuard->throwExceptionIfNotPossible(\$self);
 \t\treturn \$self;
 \t}
 

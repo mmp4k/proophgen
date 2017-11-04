@@ -31,7 +31,7 @@ class EventSpec extends ObjectBehavior
     {
         $aggregateRoot = new AggregateRoot('Model\\User');
 
-        $this->guardQualifiedPath($aggregateRoot)->shouldBe('Model/User/Guard/UserRegisteredGuard.php');
+        $this->guardQualifiedPath($aggregateRoot)->shouldBe('./src/Model/User/Guard/UserRegisteredGuard.php');
     }
 
     function it_returns_guard_name()

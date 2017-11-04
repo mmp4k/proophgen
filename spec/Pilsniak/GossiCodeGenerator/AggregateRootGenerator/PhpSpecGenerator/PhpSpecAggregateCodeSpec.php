@@ -32,13 +32,14 @@ declare(strict_types=1);
 namespace spec\Model;
 
 use Model\User;
+use Model\User\Guard\UserRegisteredGuard;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
 class UserSpec extends ObjectBehavior {
 
-\tpublic function it_can_registerUser() {
-\t\t\$this->registerUser();
+\tpublic function it_can_registerUser(UserRegisteredGuard \$userRegisteredGuard) {
+\t\t\$this->registerUser(\$userRegisteredGuard);
 \t}
 
 \tpublic function it_returns_id() {
@@ -61,6 +62,7 @@ declare(strict_types=1);
 namespace spec\Model;
 
 use Model\User;
+use Model\User\Guard\UserRegisteredGuard;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -70,8 +72,8 @@ class UserSpec extends ObjectBehavior {
 \t\t\$this->id()->shouldBe(\$this->_id());
 \t}
 
-\tpublic function let() {
-\t\t\$this->beConstructedThrough('registerUser', [\$this->_id()]);
+\tpublic function let(UserRegisteredGuard \$userRegisteredGuard) {
+\t\t\$this->beConstructedThrough('registerUser', [\$userRegisteredGuard, \$this->_id()]);
 \t}
 }
 ";

@@ -4,6 +4,7 @@ namespace Pilsniak\GossiCodeGenerator\AggregateRootGenerator;
 
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecAggregateCode;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecEvent;
+use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecEventGuard;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecEventSourced;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecExceptionNotFound;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\PhpSpecGenerator\PhpSpecInMemoryRepository;
@@ -33,13 +34,18 @@ class PhpSpecGenerator implements PhpSpecAggregateRootExecuter
      * @var PhpSpecInMemoryRepository
      */
     private $phpSpecInMemoryRepository;
+    /**
+     * @var PhpSpecEventGuard
+     */
+    private $phpSpecEventGuard;
 
     public function __construct(
         PhpSpecAggregateCode $phpSpecAggregateCode,
         PhpSpecEventSourced $phpSpecEventSourced,
         PhpSpecEvent $phpSpecEvent,
         PhpSpecExceptionNotFound $phpSpecExceptionNotFound,
-        PhpSpecInMemoryRepository $phpSpecInMemoryRepository
+        PhpSpecInMemoryRepository $phpSpecInMemoryRepository,
+        PhpSpecEventGuard $phpSpecEventGuard
     )
     {
         $this->phpSpecAggregateCode = $phpSpecAggregateCode;
@@ -47,6 +53,7 @@ class PhpSpecGenerator implements PhpSpecAggregateRootExecuter
         $this->phpSpecEvent = $phpSpecEvent;
         $this->phpSpecExceptionNotFound = $phpSpecExceptionNotFound;
         $this->phpSpecInMemoryRepository = $phpSpecInMemoryRepository;
+        $this->phpSpecEventGuard = $phpSpecEventGuard;
     }
 
     /**
@@ -60,11 +67,12 @@ class PhpSpecGenerator implements PhpSpecAggregateRootExecuter
             $this->phpSpecAggregateCode->execute($aggregateRoot),
             $this->phpSpecEventSourced->execute($aggregateRoot),
             $this->phpSpecExceptionNotFound->execute($aggregateRoot),
-            $this->phpSpecInMemoryRepository->execute($aggregateRoot)
+            $this->phpSpecInMemoryRepository->execute($aggregateRoot),
         ];
 
         foreach ($aggregateRoot->events() as $event) {
             $return[] = $this->phpSpecEvent->execute($aggregateRoot, $event);
+            $return[] = $this->phpSpecEventGuard->execute($aggregateRoot, $event);
         }
 
         return $return;

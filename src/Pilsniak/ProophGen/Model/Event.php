@@ -51,7 +51,7 @@ class Event
 
     public function guardQualifiedPath(AggregateRoot $aggregateRoot)
     {
-        return str_replace('\\', DIRECTORY_SEPARATOR, $this->guardQualifiedName($aggregateRoot)).'.php';
+        return './src/'.str_replace('\\', DIRECTORY_SEPARATOR, $this->guardQualifiedName($aggregateRoot)).'.php';
     }
 
     public function guardName()
