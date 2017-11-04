@@ -2,6 +2,7 @@
 
 namespace spec\Pilsniak\ProophGen;
 
+use Pilsniak\ComposerGenerator\ComposerJsonGenerator;
 use Pilsniak\ProophGen\FileParser;
 use Pilsniak\ProophGen\FileSystem;
 use Pilsniak\ProophGen\Model\AggregateRoot;
@@ -17,16 +18,18 @@ class ProophGeneratorSpec extends ObjectBehavior
 {
     function let(ProophGenerator\CommandGenerator $commandGenerator,
                  ProophGenerator\AggregateRootGenerator $aggregateRootGenerator,
-                 ProophGenerator\ValueObjectGenerator $valueObjectGenerator)
+                 ProophGenerator\ValueObjectGenerator $valueObjectGenerator,
+                 ComposerJsonGenerator $composerJsonGenerator)
     {
-        $this->beConstructedWith($commandGenerator, $valueObjectGenerator, $aggregateRootGenerator);
+        $this->beConstructedWith($commandGenerator, $valueObjectGenerator, $aggregateRootGenerator, $composerJsonGenerator);
     }
 
     function it_generates_files(FileParser $fileParser,
                                 FileSystem $fileSystem,
                                 ProophGenerator\CommandGenerator $commandGenerator,
                                 ProophGenerator\AggregateRootGenerator $aggregateRootGenerator,
-                                ProophGenerator\ValueObjectGenerator $valueObjectGenerator)
+                                ProophGenerator\ValueObjectGenerator $valueObjectGenerator,
+                                ComposerJsonGenerator $composerJsonGenerator)
     {
         $command = new Command('Model\Command\RegisterUser');
         $event = new Event('UserRegistered');
@@ -53,9 +56,13 @@ class ProophGeneratorSpec extends ObjectBehavior
             new FileToSave('./src/Model/CommandHandler/RegisterUserHandler.php', 'somecontent')
         ]);
 
+        $composerJsonGenerator->generate()->shouldBeCalled();
+        $composerJsonGenerator->generate()->willReturn(new FileToSave('composer.json', 'json'));
+
         $fileSystem->save('./src/Model/ValueObject/Mail.php', 'somecontent')->shouldBeCalled();
         $fileSystem->save('./src/Model/Command/RegisterUser.php', 'somecontent')->shouldBeCalled();
         $fileSystem->save('./src/Model/CommandHandler/RegisterUserHandler.php', 'somecontent')->shouldBeCalled();
+        $fileSystem->save('composer.json', 'json')->shouldBeCalled();
 
         $this->generate($fileParser, $fileSystem);
     }

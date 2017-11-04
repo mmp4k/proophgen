@@ -4,6 +4,7 @@ namespace Pilsniak\Command;
 
 use gossi\codegen\generator\CodeFileGenerator;
 use League\Flysystem\Adapter\Local;
+use Pilsniak\ComposerGenerator\ComposerJsonGenerator;
 use Pilsniak\FlySystem\FileSystem;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootCodeGenerator;
 use Pilsniak\GossiCodeGenerator\AggregateRootGenerator\AggregateRootEventGenerator;
@@ -85,7 +86,9 @@ class DoCommand extends Command
             )
         );
 
-        $proophGenerator = new ProophGenerator($commandGenerator, $valueObjectGenerator, $rootGenerator);
+        $composerGenerator = new ComposerJsonGenerator();
+
+        $proophGenerator = new ProophGenerator($commandGenerator, $valueObjectGenerator, $rootGenerator, $composerGenerator);
         $proophGenerator->generate($loader, new FileSystem(new \League\Flysystem\Filesystem(new Local('./'))));
 
     }
