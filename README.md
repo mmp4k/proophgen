@@ -10,7 +10,7 @@
 
 Why developers love CRUD? Because it's easy to automate work around it. Why developers hate DDD/CQRS? Boilerplates.
 
-Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains **40 files** (with phpspec tests!) and start coding. No more boilerplates.
+Using this small app `proophgen` and single 15th lines `yaml` file you can generate a project that contains **48 files** (with phpspec tests!) and start coding. No more boilerplates.
 
 You can also use singe command to create your ValueObject, Command and AggregateRoot with Events.
 
@@ -20,7 +20,7 @@ You can also use singe command to create your ValueObject, Command and Aggregate
 * [Create single ValueObject](#create-single-valueobject)
 * [Create single Command](#create-single-command)
 * [Create single AggregateRoot with Events](#create-single-aggregateroot-with-events)
-    * [Id Policy](#id-policy)  
+* [Id Policy](#id-policy)  
 * [Installation](#installation)
 
 ## Examples
@@ -51,10 +51,10 @@ There is your command to run:
 $ proophgen do
 ```
 
-And there is your result (since v0.1.4):
+And there is your result (since v0.1.10):
 
 ```
-./src/Infrastructure/Identity/EventSourced.php
+./src/Infrastructure/Identity/EventSourced.php                                                                                                      ✔  2042  21:06:28 
 ./src/Infrastructure/Identity/InMemory.php
 ./src/Infrastructure/User/EventSourced.php
 ./src/Infrastructure/User/InMemory.php
@@ -66,10 +66,14 @@ And there is your result (since v0.1.4):
 ./src/Model/Identity/Event/UserLogged.php
 ./src/Model/Identity/Event/UserToIdentityAssigned.php
 ./src/Model/Identity/Exception/IdentityNotFound.php
+./src/Model/Identity/Guard/EmailIdentityCreatedGuard.php
+./src/Model/Identity/Guard/UserLoggedGuard.php
+./src/Model/Identity/Guard/UserToIdentityAssignedGuard.php
 ./src/Model/Identity.php
 ./src/Model/IdentityRepository.php
 ./src/Model/User/Event/UserRegistered.php
 ./src/Model/User/Exception/UserNotFound.php
+./src/Model/User/Guard/UserRegisteredGuard.php
 ./src/Model/User.php
 ./src/Model/UserRepository.php
 ./src/Model/ValueObject/Mail.php
@@ -87,9 +91,13 @@ And there is your result (since v0.1.4):
 ./spec/Model/Identity/Event/UserLoggedSpec.php
 ./spec/Model/Identity/Event/UserToIdentityAssignedSpec.php
 ./spec/Model/Identity/Exception/IdentityNotFoundSpec.php
+./spec/Model/Identity/Guard/EmailIdentityCreatedGuardSpec.php
+./spec/Model/Identity/Guard/UserLoggedGuardSpec.php
+./spec/Model/Identity/Guard/UserToIdentityAssignedGuardSpec.php
 ./spec/Model/IdentitySpec.php
 ./spec/Model/User/Event/UserRegisteredSpec.php
 ./spec/Model/User/Exception/UserNotFoundSpec.php
+./spec/Model/User/Guard/UserRegisteredGuardSpec.php
 ./spec/Model/UserSpec.php
 ./spec/Model/ValueObject/MailSpec.php
 ./spec/Model/ValueObject/NameSpec.php
@@ -146,8 +154,11 @@ Creating files:
 [v] ./src/Model/AdminRepository.php
 [v] ./src/Model/Admin/Exception/AdminNotFound.php
 [v] ./src/Model/Admin/Event/AdminCreated.php
+[v] ./src/Model/Admin/Guard/AdminCreatedGuard.php
 [v] ./src/Model/Admin/Event/AdminRemoved.php
+[v] ./src/Model/Admin/Guard/AdminRemovedGuard.php
 [v] ./src/Model/Admin/Event/AdminBlocked.php
+[v] ./src/Model/Admin/Guard/AdminBlockedGuard.php
 [v] ./src/Infrastructure/Admin/InMemory.php
 [v] ./src/Infrastructure/Admin/EventSourced.php
 [v] ./spec/Model/AdminSpec.php
@@ -155,15 +166,26 @@ Creating files:
 [v] ./spec/Model/Admin/Exception/AdminNotFoundSpec.php
 [v] ./spec/Infrastructure/Admin/InMemorySpec.php
 [v] ./spec/Model/Admin/Event/AdminCreatedSpec.php
+[v] ./spec/Model/Admin/Guard/AdminCreatedGuardSpec.php
 [v] ./spec/Model/Admin/Event/AdminRemovedSpec.php
+[v] ./spec/Model/Admin/Guard/AdminRemovedGuardSpec.php
 [v] ./spec/Model/Admin/Event/AdminBlockedSpec.php
+[v] ./spec/Model/Admin/Guard/AdminBlockedGuardSpec.php
 ```
-### Id Policy
+## Id Policy
 
-As default `proophgen` generates all ids as string. If you wish you can change it just running this variant of previous command:
+As default `proophgen` generates all ids as string. If you wish you can change it just running this variant of previous commands:
+
+For aggregate root:
 
 ```
 proophgen ar --id-policy="Ramsey\Uuid\UuidInterface" Model/Admin \!AdminCreated AdminRemoved AdminBlocked
+```
+
+For command:
+
+```
+proophgen c --id-policy="Ramsey\Uuid\UuidInterface" Model/Command/RemoveUser 
 ```
 
 ## Installation
